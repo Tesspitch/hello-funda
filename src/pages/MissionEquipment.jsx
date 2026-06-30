@@ -16,6 +16,7 @@ export default function MissionEquipment() {
 
     const [selectedItems, setSelectedItems] = useState([]);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isChecked, setIsChecked] = useState(false); // added isChecked state
     const [score, setScore] = useState(0);
 
     // Get time from config (minutes to seconds), fallback to 120 (2 mins) if not found
@@ -75,6 +76,13 @@ export default function MissionEquipment() {
 
     const toggleItem = (item) => {
         if (isSubmitted || timeLeft <= 0) return; // ล็อคไม่ให้แก้ถ้าส่งแล้วหรือหมดเวลา
+        
+        // ถ้าเคยตรวจคำตอบแล้วมีการแก้ไข ให้รีเซ็ตสถานะการตรวจ
+        if (isChecked) {
+            setIsChecked(false);
+            setScore(0);
+        }
+
         const isSelected = selectedItems.find((i) => i.id === item.id);
         if (isSelected) {
             setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
@@ -97,10 +105,13 @@ export default function MissionEquipment() {
             }
         });
 
+        // อัปเดตคะแนนและสถานะการตรวจทุกครั้งที่กดส่ง
+        setScore(correctCount * 10);
+        setIsChecked(true);
+
         const isAllCorrect = !hasError && correctCount === totalCorrectNeeded;
 
         if (isAllCorrect) {
-            setScore(correctCount * 10);
             setIsSubmitted(true); // ล็อคหน้าจอ
             setModalInfo({
                 type: 'success',
@@ -113,7 +124,7 @@ export default function MissionEquipment() {
             setModalInfo({
                 type: 'error',
                 title: 'อ๊ะ! ยังไม่ถูกต้อง 😅',
-                message: 'อาจจะมีอุปกรณ์ที่ยังไม่ครบ หรือมีของที่ไม่จำเป็นติดมาด้วย ลองตรวจสอบดูอีกครั้งนะ'
+                message: `มีอุปกรณ์ที่ถูกต้องแล้ว ${correctCount} ชิ้น ลองดูเครื่องหมายและปรับแก้ชิ้นอื่นดูนะ!`
             });
             setShowModal(true);
         }
@@ -128,6 +139,8 @@ export default function MissionEquipment() {
             // ถ้าหมดเวลา ให้เริ่มใหม่
             setTimeLeft(initialTime);
             setSelectedItems([]);
+            setIsChecked(false);
+            setScore(0);
         }
     };
 
@@ -231,7 +244,21 @@ export default function MissionEquipment() {
 
                         {/* Right Column: Selected Equipment (Drag Drop Area) */}
                         <div className="bg-[#f8fafc] rounded-2xl p-5 border border-blue-50 flex flex-col">
-                            <h3 className="text-[#3b82f6] font-bold mb-4 text-lg">อุปกรณ์ที่เลือก</h3>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-[#3b82f6] font-bold text-lg">อุปกรณ์ที่เลือก</h3>
+                                {!isSubmitted && selectedItems.length > 0 && (
+                                    <button 
+                                        onClick={() => {
+                                            setSelectedItems([]);
+                                            setIsChecked(false);
+                                            setScore(0);
+                                        }}
+                                        className="text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 hover:bg-red-100 transition-colors"
+                                    >
+                                        เคลียร์ทั้งหมด 🗑️
+                                    </button>
+                                )}
+                            </div>
 
                             <div className="flex-1 border-2 border-dashed border-blue-300 rounded-xl bg-white flex flex-col items-center justify-center p-4 min-h-[250px]">
                                 <div className="w-full h-full bg-gray-50 rounded-xl border border-gray-200 p-4 shadow-inner relative flex flex-wrap content-start gap-3 overflow-y-auto">
@@ -244,9 +271,9 @@ export default function MissionEquipment() {
                                         selectedItems.map((item) => (
                                             <div key={item.id} className="w-16 h-16 bg-white border border-gray-200 shadow-sm rounded-lg flex flex-col items-center justify-center relative animate-bounce-short">
                                                 <span className="text-3xl">{item.icon}</span>
-                                                {/* Verification Badge (Only shown if submitted and success) */}
-                                                {isSubmitted && (
-                                                    <div className="absolute -top-2 -right-2 text-xl filter drop-shadow-sm">
+                                                {/* Verification Badge */}
+                                                {(isChecked || isSubmitted) && (
+                                                    <div className="absolute -top-2 -right-2 text-xl filter drop-shadow-sm animate-pop-in">
                                                         {item.isCorrect !== false ? "✅" : "❌"}
                                                     </div>
                                                 )}
