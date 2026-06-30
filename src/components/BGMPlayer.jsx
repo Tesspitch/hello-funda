@@ -9,7 +9,7 @@ export default function BGMPlayer() {
     useEffect(() => {
         // Attempt to auto-play when component mounts
         if (audioRef.current) {
-            audioRef.current.volume = 0.3; // Set a pleasant default volume
+            audioRef.current.volume = 0.6; // Set a pleasant default volume
             const playPromise = audioRef.current.play();
             if (playPromise !== undefined) {
                 playPromise

@@ -10,6 +10,7 @@ import QuizPhase from './pages/QuizPhase';
 import QuizScore from './pages/QuizScore';
 import SimulationScore from './pages/SimulationScore';
 import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
 import BackButton from './components/BackButton';
 import BGMPlayer from './components/BGMPlayer';
 
@@ -27,13 +28,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/input-name" element={<InputName />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/select" element={<SelectProcedure />} />
-          <Route path="/mission-equipment" element={<MissionEquipment />} />
-          <Route path="/mission-sequence" element={<MissionSequence />} />
-          <Route path="/quiz" element={<QuizPhase />} />
-          <Route path="/quiz-score" element={<QuizScore />} />
-          <Route path="/simulation-score" element={<SimulationScore />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/select" element={<ProtectedRoute><SelectProcedure /></ProtectedRoute>} />
+          <Route path="/mission-equipment" element={<ProtectedRoute><MissionEquipment /></ProtectedRoute>} />
+          <Route path="/mission-sequence" element={<ProtectedRoute><MissionSequence /></ProtectedRoute>} />
+          <Route path="/quiz" element={<ProtectedRoute><QuizPhase /></ProtectedRoute>} />
+          <Route path="/quiz-score" element={<ProtectedRoute><QuizScore /></ProtectedRoute>} />
+          <Route path="/simulation-score" element={<ProtectedRoute><SimulationScore /></ProtectedRoute>} />
           
           {/* Catch-all route สำหรับหน้าที่ไม่มีอยู่จริง (404 Not Found) */}
           <Route path="*" element={<NotFound />} />

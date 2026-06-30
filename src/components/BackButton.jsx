@@ -13,6 +13,12 @@ export default function BackButton() {
     }
 
     const handleBackClick = () => {
+        // เงื่อนไขพิเศษ: หน้า dashboard ให้ย้อนไป /select เท่านั้น
+        if (location.pathname === '/dashboard') {
+            navigate('/select');
+            return;
+        }
+
         // หน้าที่ต้องการให้ยืนยันก่อนย้อนกลับ
         if (location.pathname === '/select' || location.pathname === '/mission-equipment') {
             setShowConfirm(true);
@@ -23,7 +29,13 @@ export default function BackButton() {
 
     const confirmBack = () => {
         setShowConfirm(false);
-        navigate(-1);
+        
+        // เงื่อนไขพิเศษ: หน้า select ให้ย้อนไปหน้า inputname
+        if (location.pathname === '/select') {
+            navigate('/input-name');
+        } else {
+            navigate(-1);
+        }
     };
 
     const cancelBack = () => {

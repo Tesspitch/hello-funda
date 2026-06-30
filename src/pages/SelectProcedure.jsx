@@ -148,11 +148,11 @@ export default function SelectProcedure() {
 
     const handleConfirmStart = () => {
         if (!pendingSelection) return;
-        navigate("/mission-equipment", { 
-            state: { 
-                proc: pendingSelection.proc, 
-                diffId: pendingSelection.diffId 
-            } 
+        navigate("/mission-equipment", {
+            state: {
+                proc: pendingSelection.proc,
+                diffId: pendingSelection.diffId
+            }
         });
     };
 
@@ -176,12 +176,20 @@ export default function SelectProcedure() {
                     />
                 </div>
 
-                {/* User ID Label */}
-                {player?.id && (
-                    <div className="proc-page-user-label">
-                        Student ID: <span>{player.id}</span>
-                    </div>
-                )}
+                {/* User Info & Dashboard Button */}
+                <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-4">
+                    {/* Clickable User ID Label */}
+                    {player?.id && (
+                        <div
+                            onClick={() => navigate('/dashboard')}
+                            className="proc-page-user-label !mb-0 cursor-pointer transition-all hover:scale-105 hover:shadow-md border-2 border-transparent hover:border-blue-300 flex items-center gap-2"
+                            title="คลิกเพื่อดูผลคะแนนของคุณ"
+                        >
+                            <span>Student ID: <span>{player.id}</span></span>
+
+                        </div>
+                    )}
+                </div>
 
                 {/* Cards Container */}
                 <div className="proc-cards-layout">
@@ -213,7 +221,7 @@ export default function SelectProcedure() {
                             <p className="text-sm text-gray-600 mb-3">
                                 ระดับ: {difficulties.find(d => d.id === pendingSelection.diffId)?.label}
                             </p>
-                            
+
                             <p className="text-sm font-semibold text-gray-700 mb-1">เวลาที่กำหนด:</p>
                             <ul className="text-sm text-gray-600 list-disc list-inside">
                                 <li>เลือกอุปกรณ์: <span className="font-bold text-red-500">{timeConfig[pendingSelection.proc.id][pendingSelection.diffId].equipment} นาที</span></li>
