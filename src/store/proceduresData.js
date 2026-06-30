@@ -1,3 +1,24 @@
+import n18 from "../assets/img/foley/n18.jpg";
+import nipro from "../assets/img/foley/nipo.jpg";
+
+
+// ตั้งเวลา (นาที) สำหรับแต่ละหัตถการและระดับความยาก
+// equipment = เวลาเลือกอุปกรณ์, sequence = เวลาเรียงลำดับหัตถการ
+export const timeConfig = {
+    ng_tube: {
+        intermediate: { equipment: 4, sequence: 8 },
+        advance: { equipment: 2, sequence: 6 }
+    },
+    suction: {
+        intermediate: { equipment: 5, sequence: 12 },
+        advance: { equipment: 3, sequence: 8 }
+    },
+    foley_catheter: {
+        intermediate: { equipment: 5, sequence: 12 },
+        advance: { equipment: 3, sequence: 8 }
+    }
+};
+
 // ข้อมูลอุปกรณ์สำหรับแต่ละหัตถการ (ใช้ Emoji เป็น Placeholder ไปก่อน)
 export const equipmentData = {
     suction: [
@@ -16,8 +37,8 @@ export const equipmentData = {
         { id: 11, name: "Foley Catheter", icon: "🥢" },
         { id: 12, name: "Urine bag", icon: "🛍️" },
         { id: 13, name: "Sterile glove", icon: "🧤" },
-        { id: 14, name: "Syringe 10ml", icon: "💉" },
-        { id: 15, name: "Sterile water", icon: "💦" },
+        { id: 14, name: "Syringe 10ml", img: n18 },
+        { id: 15, name: "Nipro", img: nipro },
         { id: 16, name: "K-Y Jelly", icon: "🧴" },
         { id: 17, name: "Savlon/Betadine", icon: "🩸" },
         { id: 18, name: "Cotton balls", icon: "☁️" },
@@ -38,19 +59,15 @@ export const equipmentData = {
     ]
 };
 
-// ตั้งเวลา (นาที) สำหรับแต่ละหัตถการและระดับความยาก
-// equipment = เวลาเลือกอุปกรณ์, sequence = เวลาเรียงลำดับหัตถการ
-export const timeConfig = {
-    ng_tube: {
-        intermediate: { equipment: 4, sequence: 8 },
-        advance: { equipment: 2, sequence: 6 }
-    },
-    suction: {
-        intermediate: { equipment: 5, sequence: 12 },
-        advance: { equipment: 3, sequence: 8 }
-    },
-    foley_catheter: {
-        intermediate: { equipment: 5, sequence: 12 },
-        advance: { equipment: 3, sequence: 8 }
-    }
-};
+export const sequenceData = {
+    suction: [
+
+    ],
+    foley_catheter: [
+
+    ],
+    ng_tube: [
+
+    ]
+
+}

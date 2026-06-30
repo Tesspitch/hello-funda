@@ -76,7 +76,7 @@ export default function MissionEquipment() {
 
     const toggleItem = (item) => {
         if (isSubmitted || timeLeft <= 0) return; // ล็อคไม่ให้แก้ถ้าส่งแล้วหรือหมดเวลา
-        
+
         const isSelected = selectedItems.find((i) => i.id === item.id);
         if (isSelected) {
             setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
@@ -91,13 +91,16 @@ export default function MissionEquipment() {
         let correctCount = 0;
         let hasError = false;
 
-        selectedItems.forEach((item) => {
+        const evaluatedItems = selectedItems.map((item) => {
             if (item.isCorrect !== false) {
                 correctCount++;
             } else {
                 hasError = true;
             }
+            return { ...item, isVerified: true }; // ทำเครื่องหมายว่าไอเทมนี้ถูกตรวจแล้ว
         });
+
+        setSelectedItems(evaluatedItems);
 
         // อัปเดตคะแนนและสถานะการตรวจทุกครั้งที่กดส่ง
         setScore(correctCount * 10);
@@ -139,7 +142,7 @@ export default function MissionEquipment() {
             // ตอบผิด เมื่อปิด Modal ให้เคลียร์ชิ้นที่ผิดออกทันที
             if (isChecked) {
                 setSelectedItems(selectedItems.filter((i) => i.isCorrect !== false));
-                setIsChecked(false);
+                // ไม่ต้องเซ็ต setIsChecked(false) เพราะเราใช้ item.isVerified เป็นตัวแสดงผลแทนแล้ว
             }
         }
     };
@@ -220,22 +223,28 @@ export default function MissionEquipment() {
                         {/* Left Column: All Equipment */}
                         <div className="bg-[#f8fafc] rounded-2xl p-5 border border-blue-50 flex flex-col">
                             <h3 className="text-[#3b82f6] font-bold mb-4 text-lg">อุปกรณ์ทั้งหมด</h3>
-                            <div className="flex flex-col gap-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar content-start">
                                 {currentEquipmentList.map((item) => {
                                     const isSelected = selectedItems.some((i) => i.id === item.id);
                                     return (
                                         <div
                                             key={item.id}
                                             onClick={() => toggleItem(item)}
-                                            className={`flex items-center justify-between p-3 rounded-xl shadow-sm border cursor-pointer transition-colors ${isSelected ? 'bg-blue-50 border-blue-300' : 'bg-white border-gray-100 hover:bg-gray-50'}`}
+                                            className={`relative flex flex-col items-center justify-center p-4 rounded-2xl shadow-sm border cursor-pointer transition-all ${isSelected ? 'bg-blue-50 border-blue-400 scale-[0.98]' : 'bg-white border-gray-100 hover:border-blue-200 hover:shadow-md'}`}
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-2xl bg-gray-50 w-10 h-10 flex items-center justify-center rounded-lg">{item.icon}</span>
-                                                <span className="text-gray-700 font-bold text-sm">{item.name}</span>
+                                            {/* Checkbox badge */}
+                                            <div className={`absolute top-2 right-2 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300'}`}>
+                                                {isSelected && <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
                                             </div>
-                                            <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300'}`}>
-                                                {isSelected && <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+
+                                            <div className="w-16 h-16 mb-3 flex items-center justify-center rounded-xl overflow-hidden bg-gray-50 border border-gray-100">
+                                                {item.img ? (
+                                                    <img src={item.img} alt={item.name} className="w-full h-full object-contain p-1" />
+                                                ) : (
+                                                    <span className="text-4xl">{item.icon}</span>
+                                                )}
                                             </div>
+                                            <span className="text-gray-700 font-bold text-xs text-center leading-tight line-clamp-2">{item.name}</span>
                                         </div>
                                     );
                                 })}
@@ -247,7 +256,7 @@ export default function MissionEquipment() {
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-[#3b82f6] font-bold text-lg">อุปกรณ์ที่เลือก</h3>
                                 {!isSubmitted && selectedItems.length > 0 && (
-                                    <button 
+                                    <button
                                         onClick={() => {
                                             setSelectedItems([]);
                                             setIsChecked(false);
@@ -269,10 +278,16 @@ export default function MissionEquipment() {
                                         </div>
                                     ) : (
                                         selectedItems.map((item) => (
-                                            <div key={item.id} className="w-16 h-16 bg-white border border-gray-200 shadow-sm rounded-lg flex flex-col items-center justify-center relative animate-bounce-short">
-                                                <span className="text-3xl">{item.icon}</span>
+                                            <div key={item.id} className="w-16 h-16 bg-white border border-gray-200 shadow-sm rounded-lg flex flex-col items-center justify-center relative animate-bounce-short overflow-hidden p-1">
+                                                <span className="text-3xl w-full h-full flex items-center justify-center">
+                                                    {item.img ? (
+                                                        <img src={item.img} alt={item.name} className="w-full h-full object-contain" />
+                                                    ) : (
+                                                        item.icon
+                                                    )}
+                                                </span>
                                                 {/* Verification Badge */}
-                                                {(isChecked || isSubmitted) && (
+                                                {(item.isVerified || isSubmitted) && (
                                                     <div className="absolute -top-2 -right-2 text-xl filter drop-shadow-sm animate-pop-in">
                                                         {item.isCorrect !== false ? "✅" : "❌"}
                                                     </div>
@@ -317,14 +332,11 @@ export default function MissionEquipment() {
                     {/* Footer: Tip */}
                     <div className="flex justify-between items-end mt-2">
                         <div className="flex items-center gap-3 bg-[#f0fdf4] text-green-700 px-6 py-3 rounded-2xl border border-green-100 shadow-sm w-fit">
-                            <span className="text-2xl">💡</span>
+
                             <span className="font-bold">Tip : เลือกให้ครบจะได้คะแนนเต็มนะ!</span>
                         </div>
 
-                        {/* Mascot Placeholder */}
-                        <div className="w-28 h-28 bg-pink-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg absolute -bottom-6 -right-2 transform rotate-12 z-10">
-                            <span className="text-6xl">🐰</span>
-                        </div>
+
                     </div>
 
                 </div>
