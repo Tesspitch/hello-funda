@@ -77,12 +77,6 @@ export default function MissionEquipment() {
     const toggleItem = (item) => {
         if (isSubmitted || timeLeft <= 0) return; // ล็อคไม่ให้แก้ถ้าส่งแล้วหรือหมดเวลา
         
-        // ถ้าเคยตรวจคำตอบแล้วมีการแก้ไข ให้รีเซ็ตสถานะการตรวจ
-        if (isChecked) {
-            setIsChecked(false);
-            setScore(0);
-        }
-
         const isSelected = selectedItems.find((i) => i.id === item.id);
         if (isSelected) {
             setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
@@ -124,7 +118,7 @@ export default function MissionEquipment() {
             setModalInfo({
                 type: 'error',
                 title: 'อ๊ะ! ยังไม่ถูกต้อง 😅',
-                message: `มีอุปกรณ์ที่ถูกต้องแล้ว ${correctCount} ชิ้น ลองดูเครื่องหมายและปรับแก้ชิ้นอื่นดูนะ!`
+                message: `มีอุปกรณ์ที่ถูกต้องแล้ว ${correctCount} ชิ้น ชิ้นที่ผิดจะถูกนำออกอัตโนมัติ ลองเลือกใหม่ดูนะ!`
             });
             setShowModal(true);
         }
@@ -141,6 +135,12 @@ export default function MissionEquipment() {
             setSelectedItems([]);
             setIsChecked(false);
             setScore(0);
+        } else {
+            // ตอบผิด เมื่อปิด Modal ให้เคลียร์ชิ้นที่ผิดออกทันที
+            if (isChecked) {
+                setSelectedItems(selectedItems.filter((i) => i.isCorrect !== false));
+                setIsChecked(false);
+            }
         }
     };
 
