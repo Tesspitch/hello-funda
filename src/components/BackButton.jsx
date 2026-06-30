@@ -18,6 +18,12 @@ export default function BackButton() {
             navigate('/select');
             return;
         }
+        
+        // เงื่อนไขพิเศษ: หน้า input-name ให้ย้อนไป home (/) 
+        if (location.pathname === '/input-name') {
+            navigate('/');
+            return;
+        }
 
         // หน้าที่ต้องการให้ยืนยันก่อนย้อนกลับ
         if (location.pathname === '/select' || location.pathname === '/mission-equipment') {

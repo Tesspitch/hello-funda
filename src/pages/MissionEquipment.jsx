@@ -201,7 +201,12 @@ export default function MissionEquipment() {
                 </div>
 
                 {/* Main UI Frame (Matching the screenshot) */}
-                <div className="bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border border-blue-50">
+                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-blue-50'}`}>
+                    
+                    {/* Urgent Screen Flash Effect */}
+                    {timeLeft <= 10 && !isSubmitted && (
+                        <div className="absolute inset-0 pointer-events-none z-0 bg-red-500/5 animate-pulse rounded-[32px]"></div>
+                    )}
 
                     {/* Header: Title and Timer */}
                     <div className="flex justify-between items-start mb-6">
@@ -209,7 +214,13 @@ export default function MissionEquipment() {
                             <h2 className="text-2xl font-bold text-[#1e3a8a] mb-1">Mission 1 : เลือกอุปกรณ์ให้ครบ</h2>
                             <p className="text-gray-600 text-sm font-medium">เลือกอุปกรณ์ที่ต้องใช้ในหัตถการให้ครบถ้วน</p>
                         </div>
-                        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-colors ${timeLeft <= 30 ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' : 'bg-blue-50 text-[#1e3a8a] border-blue-100'}`}>
+                        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${
+                            timeLeft <= 10 && !isSubmitted
+                                ? 'bg-red-500 text-white border-red-600 animate-timer-urgent scale-110'
+                                : timeLeft <= 30 && !isSubmitted
+                                    ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' 
+                                    : 'bg-blue-50 text-[#1e3a8a] border-blue-100'
+                        }`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
