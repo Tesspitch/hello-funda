@@ -65,11 +65,32 @@ body {
   animation: btn-pulse 2.5s ease-in-out infinite;
 }
 
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+
+  20% {
+    left: 200%;
+  }
+
+  100% {
+    left: 200%;
+  }
+}
+
+.animate-shine {
+  animation: shine 3s infinite;
+}
+
 @keyframes timer-urgent {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
   }
+
   50% {
     transform: scale(1.1);
     box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
@@ -77,7 +98,7 @@ body {
 }
 
 .animate-timer-urgent {
-  animation: timer-urgent 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: timer-urgent 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* ========================================= */
@@ -322,12 +343,13 @@ body {
 
 .back-btn-icon {
   /* Push slightly left so it looks visually centered */
-  margin-right: 2px; 
+  margin-right: 2px;
 }
 
 /* Responsive Scaling for the Global Buttons */
 @media (max-height: 600px),
 (max-width: 600px) {
+
   .global-back-btn,
   .global-sound-btn {
     top: 16px;
@@ -335,8 +357,14 @@ body {
     height: 40px;
     border-width: 2px;
   }
-  .global-back-btn { left: 16px; }
-  .global-sound-btn { right: 16px; }
+
+  .global-back-btn {
+    left: 16px;
+  }
+
+  .global-sound-btn {
+    right: 16px;
+  }
 
   .back-btn-icon,
   .sound-btn-icon {
@@ -346,14 +374,21 @@ body {
 }
 
 @media (max-height: 450px) {
+
   .global-back-btn,
   .global-sound-btn {
     top: 8px;
     width: 32px;
     height: 32px;
   }
-  .global-back-btn { left: 8px; }
-  .global-sound-btn { right: 8px; }
+
+  .global-back-btn {
+    left: 8px;
+  }
+
+  .global-sound-btn {
+    right: 8px;
+  }
 
   .back-btn-icon,
   .sound-btn-icon {
@@ -460,7 +495,8 @@ body {
 @media (min-width: 1024px) {
   .proc-cards-layout {
     justify-content: center;
-    overflow: hidden; /* no scroll on desktop */
+    overflow: hidden;
+    /* no scroll on desktop */
     padding: 1rem;
     gap: 30px;
   }

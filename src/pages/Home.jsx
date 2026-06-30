@@ -32,13 +32,29 @@ export default function Home() {
             <div className="z-30 mt-[-40px] sm:mt-[-50px] md:mt-[-60px] lg:mt-[-80px]">
                 <Link
                     to="/input-name"
-                    className="block transition-transform duration-300 hover:scale-110 active:scale-95"
+                    className="relative block transition-transform duration-300 hover:scale-110 active:scale-95 group"
                 >
                     <img
                         src={startBtn}
                         alt="START"
                         className="w-[220px] sm:w-[280px] md:w-[340px] lg:w-[400px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] cursor-pointer animate-btn-pulse"
                     />
+                    {/* Shine Effect Overlay */}
+                    <div 
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            WebkitMaskImage: `url(${startBtn})`,
+                            WebkitMaskSize: 'contain',
+                            WebkitMaskRepeat: 'no-repeat',
+                            WebkitMaskPosition: 'center',
+                            maskImage: `url(${startBtn})`,
+                            maskSize: 'contain',
+                            maskRepeat: 'no-repeat',
+                            maskPosition: 'center'
+                        }}
+                    >
+                        <div className="absolute top-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-80 transform -skew-x-12 animate-shine"></div>
+                    </div>
                 </Link>
             </div>
         </div>
