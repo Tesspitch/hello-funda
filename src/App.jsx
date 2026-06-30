@@ -10,6 +10,7 @@ import QuizPhase from './pages/QuizPhase';
 import QuizScore from './pages/QuizScore';
 import SimulationScore from './pages/SimulationScore';
 import BackButton from './components/BackButton';
+import BGMPlayer from './components/BGMPlayer';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
 
       <div className="min-h-screen font-sans text-gray-800 font-medium">
         
-        {/* Global Back Button (Appears on all pages except '/') */}
+        {/* Global Components */}
+        <BGMPlayer />
         <BackButton />
 
         {/* 2. กำหนดเส้นทาง (Routes) */}

@@ -258,13 +258,13 @@ body {
 }
 
 /* ========================================= */
-/* === Global Back Button === */
+/* === Global Back Button & Sound Button === */
 /* ========================================= */
 
-.global-back-btn {
+.global-back-btn,
+.global-sound-btn {
   position: fixed;
   top: 24px;
-  left: 24px;
   z-index: 1000;
   width: 48px;
   height: 48px;
@@ -280,49 +280,69 @@ body {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.global-back-btn:hover {
+.global-back-btn {
+  left: 24px;
+}
+
+.global-sound-btn {
+  right: 24px;
+}
+
+.global-back-btn:hover,
+.global-sound-btn:hover {
   transform: scale(1.1) rotate(-5deg);
   background-color: #f4605b;
   box-shadow: 0 6px 15px rgba(251, 134, 130, 0.6);
 }
 
-.global-back-btn:active {
+.global-back-btn:active,
+.global-sound-btn:active {
   transform: scale(0.95);
 }
 
-.back-btn-icon {
+.back-btn-icon,
+.sound-btn-icon {
   width: 24px;
   height: 24px;
-  /* Push slightly left so it looks visually centered */
-  margin-right: 2px;
 }
 
-/* Responsive Scaling for the Back Button */
+.back-btn-icon {
+  /* Push slightly left so it looks visually centered */
+  margin-right: 2px; 
+}
+
+/* Responsive Scaling for the Global Buttons */
 @media (max-height: 600px),
 (max-width: 600px) {
-  .global-back-btn {
+  .global-back-btn,
+  .global-sound-btn {
     top: 16px;
-    left: 16px;
     width: 40px;
     height: 40px;
     border-width: 2px;
   }
+  .global-back-btn { left: 16px; }
+  .global-sound-btn { right: 16px; }
 
-  .back-btn-icon {
+  .back-btn-icon,
+  .sound-btn-icon {
     width: 20px;
     height: 20px;
   }
 }
 
 @media (max-height: 450px) {
-  .global-back-btn {
+  .global-back-btn,
+  .global-sound-btn {
     top: 8px;
-    left: 8px;
     width: 32px;
     height: 32px;
   }
+  .global-back-btn { left: 8px; }
+  .global-sound-btn { right: 8px; }
 
-  .back-btn-icon {
+  .back-btn-icon,
+  .sound-btn-icon {
     width: 16px;
     height: 16px;
   }
