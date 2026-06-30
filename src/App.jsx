@@ -9,6 +9,7 @@ import MissionSequence from './pages/MissionSequence';
 import QuizPhase from './pages/QuizPhase';
 import QuizScore from './pages/QuizScore';
 import SimulationScore from './pages/SimulationScore';
+import NotFound from './pages/NotFound';
 import BackButton from './components/BackButton';
 import BGMPlayer from './components/BGMPlayer';
 
@@ -33,6 +34,9 @@ function App() {
           <Route path="/quiz" element={<QuizPhase />} />
           <Route path="/quiz-score" element={<QuizScore />} />
           <Route path="/simulation-score" element={<SimulationScore />} />
+          
+          {/* Catch-all route สำหรับหน้าที่ไม่มีอยู่จริง (404 Not Found) */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
       </div>
