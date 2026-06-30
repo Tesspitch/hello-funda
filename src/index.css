@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
 
 body {
   margin: 0;
@@ -429,17 +428,14 @@ body {
 .proc-cards-layout {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: stretch;
   justify-content: flex-start;
-  gap: 30px;
-  padding: 1rem 1rem 2rem 1rem;
+  gap: 20px;
+  padding: 1rem;
   overflow-x: auto;
   width: 100%;
   max-width: 1200px;
   scroll-snap-type: x mandatory;
-  /* Hide horizontal scrollbar */
-  /* -ms-overflow-style: none;
-  scrollbar-width: none; */
 }
 
 .proc-cards-layout::-webkit-scrollbar {
@@ -449,6 +445,9 @@ body {
 @media (min-width: 1024px) {
   .proc-cards-layout {
     justify-content: center;
+    overflow: hidden; /* no scroll on desktop */
+    padding: 1rem;
+    gap: 30px;
   }
 }
 
@@ -456,6 +455,7 @@ body {
   scroll-snap-align: center;
   flex-shrink: 0;
   width: 280px;
+  display: flex;
 }
 
 @media (min-width: 640px) {
@@ -466,7 +466,8 @@ body {
 
 @media (min-width: 1024px) {
   .proc-card-wrapper {
-    width: 320px;
+    flex: 1;
+    max-width: 340px;
   }
 }
 
@@ -483,7 +484,9 @@ body {
   text-align: center;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  height: 40vh;
+  width: 100%;
+  height: auto;
+  min-height: 50vh;
 }
 
 .proc-card:hover {
@@ -596,7 +599,7 @@ body {
 }
 
 .proc-card-start-btn {
-  margin-top: 10px;
+  margin-top: auto;
   width: 100%;
   padding: 15px 0;
   border-radius: 9999px;

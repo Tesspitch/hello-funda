@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
 import bg from '../assets/img/background1.png';
-import nurse from '../assets/img/nurse.svg';
 import logo from '../assets/icons/hellofunda.svg';
 
 export default function InputName() {
@@ -31,25 +30,26 @@ export default function InputName() {
 
     return (
         <div
-            className="relative w-full h-screen h-[100dvh] overflow-hidden bg-cover bg-center bg-no-repeat"
+            className="relative w-full h-screen h-[100dvh] overflow-hidden bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${bg})` }}
         >
+            {/* Blur Overlay */}
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-[6px] z-0"></div>
 
-            {/* ========================================= */}
-            {/* === MOBILE / TABLET (< lg): Stack แนวตั้ง === */}
-            {/* ========================================= */}
-            <div className="flex lg:hidden flex-col items-center justify-center h-full px-4 gap-8">
+            {/* Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 mb-10">
 
                 {/* โลโก้ hellofunda */}
-                <img
-                    src={logo}
-                    alt="Hello Funda"
-                    className="w-[260px] sm:w-[340px] md:w-[420px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] animate-logo-float translate-x-4"
-                />
+                <div className="animate-logo-float">
+                    <img
+                        src={logo}
+                        alt="Hello Funda"
+                        className="w-[280px] sm:w-[380px] md:w-[480px] lg:w-[550px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)]"
+                    />
+                </div>
 
                 {/* กล่อง Input + ปุ่ม Save */}
-                <div className="flex flex-col items-center gap-8 w-full max-w-[240px]">
-
+                <div className="flex flex-col items-center w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px]">
                     {/* Input */}
                     <input
                         type="text"
@@ -57,68 +57,16 @@ export default function InputName() {
                         onChange={(e) => setInputId(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder="STUDENT ID ..."
-                        className="input-cute w-full"
+                        className="input-cute w-full uppercase"
                     />
 
                     {/* ปุ่ม Save */}
                     <button
                         onClick={handleSave}
                         disabled={!inputId.trim()}
-                        className="btn-cute w-full"
+                        className="btn-cute w-full uppercase tracking-wider"
                     >
                         SAVE
-                    </button>
-                </div>
-            </div>
-
-            {/* ========================================= */}
-            {/* === DESKTOP (lg+): Layout ซ้าย-ขวา === */}
-            {/* ========================================= */}
-
-            {/* ตัวละครพยาบาล: ซ้ายของกึ่งกลาง, ขอบล่างล้นจอ */}
-            <div className="hidden lg:flex absolute bottom-[-8%] left-[8%] xl:left-[10%] h-full items-end pointer-events-none">
-                <img
-                    src={nurse}
-                    alt="nurse"
-                    className="h-[105vh] xl:h-[115vh] w-auto object-contain drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] animate-nurse-breathe"
-                />
-            </div>
-
-            {/* โลโก้ + ฟอร์ม: ขวาของกึ่งกลาง, จัดกลางแนวตั้ง */}
-            <div className="hidden lg:flex absolute top-1/2 right-[18%] xl:right-[18%] -translate-y-1/2 flex-col items-center gap-6">
-
-                {/* โลโก้ hellofunda */}
-                <img
-                    src={logo}
-                    alt="Hello Funda"
-                    className="w-[400px] xl:w-[500px] 2xl:w-[580px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] animate-logo-float"
-                />
-
-                {/* กล่องฟอร์ม */}
-                <div className="flex flex-col items-center gap-8 w-[380px] xl:w-[420px] bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.15)] border border-white/30">
-
-                    {/* Label */}
-                    <label className="text-white text-xl xl:text-2xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)] tracking-wide">
-                        กรอกรหัสนักศึกษา
-                    </label>
-
-                    {/* Input */}
-                    <input
-                        type="text"
-                        value={inputId}
-                        onChange={(e) => setInputId(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Student ID..."
-                        className="input-cute w-full"
-                    />
-
-                    {/* ปุ่ม Save */}
-                    <button
-                        onClick={handleSave}
-                        disabled={!inputId.trim()}
-                        className="btn-cute w-full"
-                    >
-                        Save
                     </button>
                 </div>
             </div>
@@ -130,7 +78,7 @@ export default function InputName() {
                 <div className="modal-overlay" onClick={handleCancel}>
                     <div className="modal-card" onClick={(e) => e.stopPropagation()}>
 
-                        <p className="modal-title">ยืนยันรหัสนักศึกษา</p>
+                        <p className="modal-title">ยืนยันรหัสนิสิต</p>
 
                         <p className="modal-id">{inputId.trim()}</p>
 

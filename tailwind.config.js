@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Fredoka', 'cursive', 'sans-serif'],
+      },
       // 1. ส่วนสีของคุณ
       colors: {
         primary: '#FF6B93',

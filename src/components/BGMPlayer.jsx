@@ -9,7 +9,7 @@ export default function BGMPlayer() {
     useEffect(() => {
         // Attempt to auto-play when component mounts
         if (audioRef.current) {
-            audioRef.current.volume = 0.4; // Set a pleasant default volume
+            audioRef.current.volume = 0.3; // Set a pleasant default volume
             const playPromise = audioRef.current.play();
             if (playPromise !== undefined) {
                 playPromise
@@ -41,21 +41,21 @@ export default function BGMPlayer() {
     return (
         <>
             <audio ref={audioRef} src={bgmSound} loop />
-            <button 
-                className="global-sound-btn" 
-                onClick={togglePlay} 
+            <button
+                className="global-sound-btn"
+                onClick={togglePlay}
                 title={isPlaying ? "ปิดเสียง (Mute)" : "เปิดเสียง (Unmute)"}
             >
                 {isPlaying ? (
                     // Unmuted Icon (Sound Waves)
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2.5" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         className="sound-btn-icon"
                     >
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
@@ -64,14 +64,14 @@ export default function BGMPlayer() {
                     </svg>
                 ) : (
                     // Muted Icon (Crossed Out)
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2.5" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         className="sound-btn-icon"
                     >
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
+import { timeConfig } from "../store/proceduresData";
 import bg from '../assets/img/background1.png';
 import logo from '../assets/icons/hellofunda.svg';
 import ngIcon from '../assets/icons/ng.svg';
@@ -125,6 +126,10 @@ export default function SelectProcedure() {
     const [selectedProcId, setSelectedProcId] = useState(null);
     const [selectedDiffId, setSelectedDiffId] = useState(null);
 
+    // State สำหรับ Modal ยืนยัน
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [pendingSelection, setPendingSelection] = useState(null);
+
     const handleSelectDiff = (procId, diffId) => {
         if (selectedProcId === procId && selectedDiffId === diffId) {
             setSelectedProcId(null);
@@ -135,14 +140,25 @@ export default function SelectProcedure() {
         }
     };
 
-    const handleStart = (procId) => {
+    const handleStartClick = (procId) => {
         const selectedProc = procedures.find(p => p.id === procId);
+        setPendingSelection({ proc: selectedProc, diffId: selectedDiffId });
+        setShowConfirmModal(true);
+    };
+
+    const handleConfirmStart = () => {
+        if (!pendingSelection) return;
         navigate("/mission-equipment", { 
             state: { 
-                proc: selectedProc, 
-                diffId: selectedDiffId 
+                proc: pendingSelection.proc, 
+                diffId: pendingSelection.diffId 
             } 
         });
+    };
+
+    const handleCancelStart = () => {
+        setShowConfirmModal(false);
+        setPendingSelection(null);
     };
 
     return (
@@ -175,13 +191,50 @@ export default function SelectProcedure() {
                                 proc={proc}
                                 selectedDifficulty={selectedProcId === proc.id ? selectedDiffId : ""}
                                 onSelectDifficulty={(diffId) => handleSelectDiff(proc.id, diffId)}
-                                onStart={() => handleStart(proc.id)}
+                                onStart={() => handleStartClick(proc.id)}
                             />
                         </div>
                     ))}
                 </div>
 
             </div>
+
+            {/* Confirm Modal Popup */}
+            {showConfirmModal && pendingSelection && (
+                <div className="modal-overlay" onClick={handleCancelStart}>
+                    <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+
+                        <p className="modal-title">ยืนยันการเริ่มฝึก</p>
+
+                        <div className="mb-4 text-left p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-inner">
+                            <p className="font-bold text-lg mb-1" style={{ color: pendingSelection.proc.color }}>
+                                {pendingSelection.proc.name}
+                            </p>
+                            <p className="text-sm text-gray-600 mb-3">
+                                ระดับ: {difficulties.find(d => d.id === pendingSelection.diffId)?.label}
+                            </p>
+                            
+                            <p className="text-sm font-semibold text-gray-700 mb-1">เวลาที่กำหนด:</p>
+                            <ul className="text-sm text-gray-600 list-disc list-inside">
+                                <li>เลือกอุปกรณ์: <span className="font-bold text-red-500">{timeConfig[pendingSelection.proc.id][pendingSelection.diffId].equipment} นาที</span></li>
+                                <li>เรียงลำดับหัตถการ: <span className="font-bold text-red-500">{timeConfig[pendingSelection.proc.id][pendingSelection.diffId].sequence} นาที</span></li>
+                            </ul>
+                        </div>
+
+                        <p className="modal-subtitle mb-6">พร้อมที่จะเริ่มจับเวลาแล้วใช่ไหม?</p>
+
+                        <div className="modal-buttons">
+                            <button className="modal-btn modal-btn-cancel" onClick={handleCancelStart}>
+                                ยกเลิก
+                            </button>
+                            <button className="modal-btn modal-btn-confirm" onClick={handleConfirmStart}>
+                                ลุยเลย!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
