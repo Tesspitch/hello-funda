@@ -11,11 +11,11 @@ export default function Home() {
             style={{ backgroundImage: `url(${bg})` }}
         >
             {/* โลโก้ hellofunda */}
-            <div className="z-20 animate-logo-float mb-[-30px] sm:mb-[-40px] md:mb-[-50px] lg:mb-[-60px]">
+            <div className="z-20 animate-logo-float mb-[-30px] sm:mb-[-40px] md:mb-[-50px] lg:mb-[-60px] [@media(max-height:500px)]:mb-[-10px] [@media(max-height:500px)]:md:mb-[-20px]">
                 <img
                     src={logo}
                     alt="Hello Funda"
-                    className="w-[280px] sm:w-[380px] md:w-[480px] lg:w-[550px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)]"
+                    className="w-[280px] sm:w-[380px] md:w-[480px] lg:w-[550px] [@media(max-height:500px)]:w-[200px] [@media(max-height:500px)]:md:w-[250px] max-w-[90vw] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)]"
                 />
             </div>
 
@@ -24,12 +24,12 @@ export default function Home() {
                 <img
                     src={nurse}
                     alt="nurse"
-                    className="h-[45vh] sm:h-[50vh] md:h-[55vh] lg:h-[65vh] w-auto object-contain drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] animate-nurse-breathe"
+                    className="h-[45vh] sm:h-[50vh] md:h-[55vh] lg:h-[65vh] [@media(max-height:500px)]:h-[40vh] [@media(max-height:500px)]:md:h-[50vh] w-auto max-w-[90vw] object-contain drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] animate-nurse-breathe"
                 />
             </div>
 
             {/* ปุ่ม START */}
-            <div className="z-30 mt-[-40px] sm:mt-[-50px] md:mt-[-60px] lg:mt-[-80px]">
+            <div className="z-30 mt-[-40px] sm:mt-[-50px] md:mt-[-60px] lg:mt-[-80px] [@media(max-height:500px)]:mt-[-10px] [@media(max-height:500px)]:md:mt-[-20px]">
                 <Link
                     to="/input-name"
                     className="relative block transition-transform duration-300 hover:scale-110 active:scale-95 group"
@@ -37,7 +37,7 @@ export default function Home() {
                     <img
                         src={startBtn}
                         alt="START"
-                        className="w-[220px] sm:w-[280px] md:w-[340px] lg:w-[400px] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] cursor-pointer animate-btn-pulse"
+                        className="w-[220px] sm:w-[280px] md:w-[340px] lg:w-[400px] [@media(max-height:500px)]:w-[160px] [@media(max-height:500px)]:md:w-[200px] max-w-[80vw] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] cursor-pointer animate-btn-pulse"
                     />
                     {/* Shine Effect Overlay */}
                     <div 
