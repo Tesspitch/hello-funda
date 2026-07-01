@@ -21,6 +21,9 @@ export default function MissionEquipment() {
     const [score, setScore] = useState(0);
     const [mistakesCount, setMistakesCount] = useState(0);
 
+    const [isLoadingImages, setIsLoadingImages] = useState(true);
+    const [loadingProgress, setLoadingProgress] = useState(0);
+
     // Get time from config (minutes to seconds), fallback to 120 (2 mins) if not found
     const initialTime = (proc && diffId && timeConfig[proc.id]?.[diffId]?.equipment)
         ? timeConfig[proc.id][diffId].equipment * 60
@@ -29,13 +32,60 @@ export default function MissionEquipment() {
     // Timer State
     const [timeLeft, setTimeLeft] = useState(initialTime);
 
+    // ดึงรายการอุปกรณ์ตามหัตถการที่เลือก
+    const currentEquipmentList = proc ? (equipmentData[proc.id] || []) : [];
+    const totalCorrectNeeded = currentEquipmentList.filter(i => i.isCorrect !== false).length;
+
     // Modal State
     const [showModal, setShowModal] = useState(false);
     const [modalInfo, setModalInfo] = useState({ type: 'error', title: '', message: '' });
 
+    // Image Preloading Effect
+    useEffect(() => {
+        if (!proc) return;
+        
+        if (!currentEquipmentList.length) {
+            setIsLoadingImages(false);
+            return;
+        }
+
+        let loadedCount = 0;
+        const totalImages = currentEquipmentList.filter(item => item.img).length;
+        
+        if (totalImages === 0) {
+            setIsLoadingImages(false);
+            return;
+        }
+
+        const promises = currentEquipmentList
+            .filter(item => item.img)
+            .map(item => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.src = item.img;
+                    img.onload = () => {
+                        loadedCount++;
+                        setLoadingProgress(Math.round((loadedCount / totalImages) * 100));
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        loadedCount++;
+                        setLoadingProgress(Math.round((loadedCount / totalImages) * 100));
+                        resolve();
+                    };
+                });
+            });
+
+        Promise.all(promises).then(() => {
+            setTimeout(() => {
+                setIsLoadingImages(false);
+            }, 400);
+        });
+    }, [proc]);
+
     // Timer Effect
     useEffect(() => {
-        if (!proc || isSubmitted || timeLeft <= 0) return;
+        if (!proc || isSubmitted || timeLeft <= 0 || isLoadingImages) return;
 
         const timerId = setInterval(() => {
             setTimeLeft((prev) => {
@@ -49,7 +99,7 @@ export default function MissionEquipment() {
         }, 1000);
 
         return () => clearInterval(timerId);
-    }, [timeLeft, isSubmitted, proc]);
+    }, [timeLeft, isSubmitted, proc, isLoadingImages]);
 
     // Format time function
     const formatTime = (seconds) => {
@@ -62,10 +112,6 @@ export default function MissionEquipment() {
     if (!proc) {
         return <Navigate to="/select" replace />;
     }
-
-    // ดึงรายการอุปกรณ์ตามหัตถการที่เลือก (ดึงจาก equipmentData)
-    const currentEquipmentList = equipmentData[proc.id] || [];
-    const totalCorrectNeeded = currentEquipmentList.filter(i => i.isCorrect !== false).length;
 
     const handleTimeUp = () => {
         setModalInfo({
@@ -185,6 +231,22 @@ export default function MissionEquipment() {
                 backgroundPosition: 'center'
             }}
         >
+            {/* Loading Overlay */}
+            {isLoadingImages && (
+                <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white/90 backdrop-blur-md px-4">
+                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-blue-100 border-t-[#3b82f6] rounded-full animate-spin shadow-sm"></div>
+                    <h2 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">กำลังเตรียมอุปกรณ์...</h2>
+                    <p className="text-gray-500 mb-6 text-center text-sm md:text-base">รอสักครู่ ระบบกำลังจัดเตรียมภาพอุปกรณ์ให้ครบถ้วน</p>
+                    <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                        <div 
+                            className="h-full bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] transition-all duration-300"
+                            style={{ width: `${loadingProgress}%` }}
+                        ></div>
+                    </div>
+                    <p className="mt-2 text-sm font-bold text-[#3b82f6]">{loadingProgress}%</p>
+                </div>
+            )}
+
             {/* Modal Overlay */}
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">

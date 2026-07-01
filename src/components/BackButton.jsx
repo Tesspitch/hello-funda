@@ -12,10 +12,11 @@ export default function BackButton() {
     // อย่าโชว์ปุ่ม Back ในหน้าแรก (Home)
     const isHome = location.pathname === '/';
 
-    // Intercept browser back button (POP) on any page except home
+    // Intercept browser back button (POP) on any page except home, dashboard, and input-name
     const blocker = useBlocker(
         ({ historyAction, currentLocation }) => {
-            if (currentLocation.pathname === '/') return false;
+            const noBlockPaths = ['/', '/dashboard', '/input-name'];
+            if (noBlockPaths.includes(currentLocation.pathname)) return false;
             return historyAction === 'POP';
         }
     );
@@ -23,9 +24,9 @@ export default function BackButton() {
     const handleBackClick = () => {
         // เงื่อนไขพิเศษเพื่อให้ UI Back ไปที่หน้าที่ต้องการอย่างถูกต้อง
         if (location.pathname === '/dashboard') {
-            setUiPendingDest('/select');
+            navigate('/select');
         } else if (location.pathname === '/input-name') {
-            setUiPendingDest('/');
+            navigate('/');
         } else if (location.pathname === '/select') {
             setUiPendingDest('/input-name');
         } else {
