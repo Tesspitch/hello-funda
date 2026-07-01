@@ -14,9 +14,12 @@ const initialGameState = {
             id: "suction",
             name: "Suction",
             status: "pending",
+            preTestScore: 0,
             equipmentStatus: "not_done",
             equipmentScore: 0,
             equipmentTimeSpent: 0,
+            sequenceScore: 0,
+            postTestScore: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -25,9 +28,12 @@ const initialGameState = {
             id: "foley_catheter",
             name: "Foley Catheter",
             status: "pending",
+            preTestScore: 0,
             equipmentStatus: "not_done",
             equipmentScore: 0,
             equipmentTimeSpent: 0,
+            sequenceScore: 0,
+            postTestScore: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -36,9 +42,12 @@ const initialGameState = {
             id: "ng_tube",
             name: "NG Tube",
             status: "pending",
+            preTestScore: 0,
             equipmentStatus: "not_done",
             equipmentScore: 0,
             equipmentTimeSpent: 0,
+            sequenceScore: 0,
+            postTestScore: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -65,6 +74,43 @@ export const useGameStore = create((set) => ({
                 }
             }
         })),
+
+    // ฟังก์ชันสำหรับบันทึกคะแนน Pre-test
+    updatePreTestResult: (procedureId, newScore) =>
+        set((state) => ({
+            procedures: {
+                ...state.procedures,
+                [procedureId]: {
+                    ...state.procedures[procedureId],
+                    preTestScore: newScore,
+                }
+            }
+        })),
+
+    // ฟังก์ชันสำหรับบันทึกคะแนน Mission Sequence
+    updateMissionSequenceResult: (procedureId, newScore) =>
+        set((state) => ({
+            procedures: {
+                ...state.procedures,
+                [procedureId]: {
+                    ...state.procedures[procedureId],
+                    sequenceScore: newScore,
+                }
+            }
+        })),
+
+    // ฟังก์ชันสำหรับบันทึกคะแนน Post-test (Quiz)
+    updatePostTestResult: (procedureId, newScore) =>
+        set((state) => ({
+            procedures: {
+                ...state.procedures,
+                [procedureId]: {
+                    ...state.procedures[procedureId],
+                    postTestScore: newScore,
+                }
+            }
+        })),
+
 
     // เมื่อเล่นจบ 1 หัตถการ ให้ส่งข้อมูลมาอัปเดตผ่านฟังก์ชันนี้
     updateProcedureResult: (procedureId, newScore, timeSpent) =>

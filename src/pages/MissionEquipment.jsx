@@ -43,7 +43,7 @@ export default function MissionEquipment() {
     // Image Preloading Effect
     useEffect(() => {
         if (!proc) return;
-        
+
         if (!currentEquipmentList.length) {
             setIsLoadingImages(false);
             return;
@@ -51,7 +51,7 @@ export default function MissionEquipment() {
 
         let loadedCount = 0;
         const totalImages = currentEquipmentList.filter(item => item.img).length;
-        
+
         if (totalImages === 0) {
             setIsLoadingImages(false);
             return;
@@ -114,16 +114,21 @@ export default function MissionEquipment() {
     }
 
     const handleTimeUp = () => {
+        setIsSubmitted(true);
+        if (updateMissionEquipmentResult) {
+            updateMissionEquipmentResult(proc.id, 0, initialTime);
+        }
+        setScore(0);
         setModalInfo({
-            type: 'error',
+            type: 'timeout',
             title: 'หมดเวลาแล้ว! ⏰',
-            message: 'เวลาในการเตรียมอุปกรณ์หมดลงแล้ว ลองพยายามใหม่อีกครั้งนะความเร็วก็สำคัญ!'
+            message: 'เวลาในการเตรียมอุปกรณ์หมดลงแล้ว ไปสู่ขั้นตอนถัดไปกันเลย'
         });
         setShowModal(true);
     };
 
     const toggleItem = (item) => {
-        if (isSubmitted || timeLeft <= 0) return; // ล็อคไม่ให้แก้ถ้าส่งแล้วหรือหมดเวลา
+        if (isSubmitted || timeLeft <= 0 || isLoadingImages) return; // ล็อคไม่ให้แก้ถ้าส่งแล้ว หมดเวลา หรือกำลังโหลดภาพ
 
         const isSelected = selectedItems.find((i) => i.id === item.id);
         if (isSelected) {
@@ -136,90 +141,45 @@ export default function MissionEquipment() {
     const handleSubmit = () => {
         if (selectedItems.length === 0) return;
 
+        setModalInfo({
+            type: 'confirm',
+            title: 'ยืนยันการส่งอุปกรณ์?',
+            message: 'คุณต้องการยืนยันการจัดเตรียมอุปกรณ์ และไปยังขั้นตอนต่อไปหรือไม่?'
+        });
+        setShowModal(true);
+    };
+
+    const confirmSubmit = () => {
         let correctCount = 0;
-        let hasError = false;
+        let wrongCount = 0;
 
         const evaluatedItems = selectedItems.map((item) => {
-            if (item.isCorrect !== false) {
-                correctCount++;
-            } else {
-                hasError = true;
-            }
-            return { ...item, isVerified: true }; // ทำเครื่องหมายว่าไอเทมนี้ถูกตรวจแล้ว
+            if (item.isCorrect !== false) correctCount++;
+            else wrongCount++;
+            return { ...item, isVerified: true };
         });
 
         setSelectedItems(evaluatedItems);
 
-        const isAllCorrect = !hasError && correctCount === totalCorrectNeeded;
-        
-        let currentMistakes = mistakesCount;
-        if (!isAllCorrect) {
-            currentMistakes += 1;
-            setMistakesCount(currentMistakes);
-        }
+        let calculatedScore = totalCorrectNeeded > 0 ? Math.round(((correctCount - wrongCount) / totalCorrectNeeded) * 30) : 0;
+        calculatedScore = Math.max(0, Math.min(30, calculatedScore));
 
-        // อัปเดตคะแนนและสถานะการตรวจทุกครั้งที่กดส่ง
-        let calculatedScore = totalCorrectNeeded > 0 ? Math.round((correctCount / totalCorrectNeeded) * 100) : 0;
-        
-        // หักคะแนน 10 คะแนนต่อการตอบผิด 1 ครั้ง (คะแนนต่ำสุดคือ 0)
-        calculatedScore = Math.max(0, calculatedScore - (currentMistakes * 10));
-        
         setScore(calculatedScore);
         setIsChecked(true);
+        setIsSubmitted(true);
 
-        if (isAllCorrect) {
-            setIsSubmitted(true); // ล็อคหน้าจอ
-            
-            const timeSpent = initialTime - timeLeft;
-            if (updateMissionEquipmentResult) {
-                updateMissionEquipmentResult(proc.id, calculatedScore, timeSpent);
-                
-                // แสดงข้อมูลใน console ตามที่ต้องการ
-                console.log("Mission Passed!", {
-                    userId: player?.id,
-                    procedureId: proc.id,
-                    score: calculatedScore,
-                    timeSpent: timeSpent,
-                    status: "pass"
-                });
-            }
-
-            setModalInfo({
-                type: 'success',
-                title: '🎉 ยอดเยี่ยมมาก!',
-                message: `คุณเตรียมอุปกรณ์ได้ถูกต้องและครบถ้วน! ใช้เวลาไป ${formatTime(timeSpent)} นาที พร้อมสำหรับภารกิจต่อไปแล้ว`
-            });
-            setShowModal(true);
-        } else {
-            // ตอบผิด ให้ลองใหม่ได้ ไม่ล็อคหน้าจอ
-            setModalInfo({
-                type: 'error',
-                title: 'อ๊ะ! ยังไม่ถูกต้อง 😅',
-                message: `มีอุปกรณ์ที่ถูกต้องแล้ว ${correctCount} ชิ้น ชิ้นที่ผิดจะถูกนำออกอัตโนมัติ ลองเลือกใหม่ดูนะ!`
-            });
-            setShowModal(true);
+        const timeSpent = initialTime - timeLeft;
+        if (updateMissionEquipmentResult) {
+            updateMissionEquipmentResult(proc.id, calculatedScore, timeSpent);
         }
+
+        setShowModal(false);
+        navigate("/mission-sequence", { state: { proc, diffId } });
     };
 
     const handleModalClose = () => {
         setShowModal(false);
-        if (modalInfo.type === 'success') {
-            // ถ้ายอดเยี่ยมแล้ว ไปหน้าต่อไป
-            navigate("/mission-sequence", { state: { proc, diffId } });
-        } else if (timeLeft <= 0) {
-            // ถ้าหมดเวลา ให้เริ่มใหม่
-            setTimeLeft(initialTime);
-            setSelectedItems([]);
-            setIsChecked(false);
-            setScore(0);
-            setMistakesCount(0);
-        } else {
-            // ตอบผิด เมื่อปิด Modal ให้เคลียร์ชิ้นที่ผิดออกทันที
-            if (isChecked) {
-                setSelectedItems(selectedItems.filter((i) => i.isCorrect !== false));
-                // ไม่ต้องเซ็ต setIsChecked(false) เพราะเราใช้ item.isVerified เป็นตัวแสดงผลแทนแล้ว
-            }
-        }
+        navigate("/mission-sequence", { state: { proc, diffId } });
     };
 
     return (
@@ -238,7 +198,7 @@ export default function MissionEquipment() {
                     <h2 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">กำลังเตรียมอุปกรณ์...</h2>
                     <p className="text-gray-500 mb-6 text-center text-sm md:text-base">รอสักครู่ ระบบกำลังจัดเตรียมภาพอุปกรณ์ให้ครบถ้วน</p>
                     <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                        <div 
+                        <div
                             className="h-full bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] transition-all duration-300"
                             style={{ width: `${loadingProgress}%` }}
                         ></div>
@@ -252,17 +212,34 @@ export default function MissionEquipment() {
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
                         <div className="text-6xl mb-4">
-                            {modalInfo.type === 'success' ? '⭐' : '🤔'}
+                            {modalInfo.type === 'confirm' ? '❓' : '⏰'}
                         </div>
                         <h3 className="text-2xl font-bold mb-2 text-gray-800">{modalInfo.title}</h3>
                         <p className="text-gray-600 mb-6">{modalInfo.message}</p>
 
-                        <button
-                            onClick={handleModalClose}
-                            className={`w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 ${modalInfo.type === 'success' ? 'bg-green-500 hover:bg-green-600' : 'bg-[#FB8682] hover:bg-[#f4605b]'}`}
-                        >
-                            {modalInfo.type === 'success' ? 'ไปต่อ' : 'ลองใหม่'}
-                        </button>
+                        {modalInfo.type === 'confirm' ? (
+                            <div className="flex w-full gap-3">
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="w-full py-3.5 rounded-xl font-bold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors"
+                                >
+                                    ยกเลิก
+                                </button>
+                                <button
+                                    onClick={confirmSubmit}
+                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-md"
+                                >
+                                    ยืนยัน
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleModalClose}
+                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-blue-500 hover:bg-blue-600"
+                            >
+                                ไปต่อ
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
@@ -293,7 +270,7 @@ export default function MissionEquipment() {
 
                 {/* Main UI Frame (Matching the screenshot) */}
                 <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-blue-50'}`}>
-                    
+
                     {/* Urgent Screen Flash Effect */}
                     {timeLeft <= 10 && !isSubmitted && (
                         <div className="absolute inset-0 pointer-events-none z-0 bg-red-500/5 animate-pulse rounded-[32px]"></div>
@@ -305,13 +282,12 @@ export default function MissionEquipment() {
                             <h2 className="text-2xl font-bold text-[#1e3a8a] mb-1">Mission 1 : เลือกอุปกรณ์ให้ครบ</h2>
                             <p className="text-gray-600 text-sm font-medium">เลือกอุปกรณ์ที่ต้องใช้ในหัตถการให้ครบถ้วน</p>
                         </div>
-                        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${
-                            timeLeft <= 10 && !isSubmitted
-                                ? 'bg-red-500 text-white border-red-600 animate-timer-urgent scale-110'
-                                : timeLeft <= 30 && !isSubmitted
-                                    ? 'bg-red-50 text-red-600 border-red-200 animate-pulse' 
-                                    : 'bg-blue-50 text-[#1e3a8a] border-blue-100'
-                        }`}>
+                        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${timeLeft <= 10 && !isSubmitted
+                            ? 'bg-red-500 text-white border-red-600 animate-timer-urgent scale-110'
+                            : timeLeft <= 30 && !isSubmitted
+                                ? 'bg-red-50 text-red-600 border-red-200 animate-pulse'
+                                : 'bg-blue-50 text-[#1e3a8a] border-blue-100'
+                            }`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -402,12 +378,9 @@ export default function MissionEquipment() {
 
                             <div className="mt-4 flex flex-col items-center gap-2">
                                 <div className="bg-blue-50 text-[#3b82f6] px-8 py-2.5 rounded-full font-bold text-sm min-w-[150px] text-center border border-blue-100">
-                                    {selectedItems.length} / {totalCorrectNeeded} ชิ้นที่ถูกเลือก
+                                    {selectedItems.length} ชิ้นที่ถูกเลือก
                                 </div>
-                                <div className="font-bold text-gray-700 mt-1 text-lg flex items-center justify-between w-full px-2">
-                                    <span>คะแนน</span>
-                                    <span className="text-3xl ml-2 text-green-600">{score}</span>
-                                </div>
+
 
                                 {/* Submit Button */}
                                 {!isSubmitted ? (
