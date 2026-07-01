@@ -41,7 +41,7 @@ import micropore from "../assets/img/ng/9_micropore.webp"                       
 ///////////////////////////
 /// TRUE ///
 import urine_bag from "../assets/img/foley/urine_bag.webp";
-import ucs from "../assets/img/foley/ucs.webp";
+import ucs from "../assets/img/foley/UCS.webp";
 import fd from "../assets/img/foley/fd.webp";
 import needle from "../assets/img/foley/needle.webp";
 import syring_10_cc from "../assets/img/foley/syring_10.webp";
