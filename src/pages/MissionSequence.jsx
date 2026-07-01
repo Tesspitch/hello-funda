@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import bg from '../assets/img/background1.png';
+import { useGameStore } from "../store/useGameStore";
 
 export default function MissionSequence() {
     const location = useLocation();
     const stateData = location.state;
     const proc = stateData?.proc;
+    const diffId = stateData?.diffId;
+    const player = useGameStore((state) => state.player);
 
     const [isLoading, setIsLoading] = useState(true);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -58,13 +61,23 @@ export default function MissionSequence() {
                 backgroundPosition: 'center'
             }}
         >
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-0"></div>
+            {/*<div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-0"></div>*/}
 
             <div className="relative z-10 flex flex-col items-center pt-24 pb-10 px-4 w-full max-w-5xl mx-auto h-full">
                 <div className="w-full flex justify-between items-center bg-white/95 backdrop-blur-md px-6 py-3 rounded-2xl shadow-sm mb-4 border-2" style={{ borderColor: proc.color }}>
                     <div className="flex items-center gap-3">
                         <span className="text-xl font-bold" style={{ color: proc.color }}>{proc.name}</span>
                         <span className="text-gray-500 font-medium hidden md:inline">({proc.nameTh})</span>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
+                        <span className="px-3 py-1 rounded-full text-xs md:text-sm font-bold bg-gray-100 text-gray-700">
+                            Level: {diffId === 'intermediate' ? 'Intermediate' : 'Advance'}
+                        </span>
+                        {player?.id && (
+                            <span className="px-3 py-1 rounded-full text-xs md:text-sm font-bold bg-orange-100 text-orange-600">
+                                ID: {player.id}
+                            </span>
+                        )}
                     </div>
                 </div>
 

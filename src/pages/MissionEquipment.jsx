@@ -1,6 +1,6 @@
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import bg from '../assets/img/background1.png';
 import { equipmentData, timeConfig } from "../store/proceduresData";
 
@@ -84,22 +84,34 @@ export default function MissionEquipment() {
     }, [proc]);
 
     // Timer Effect
+    const endTimeRef = useRef(null);
+
     useEffect(() => {
-        if (!proc || isSubmitted || timeLeft <= 0 || isLoadingImages) return;
+        if (!proc || isSubmitted || timeLeft <= 0 || isLoadingImages) {
+            // เคลียร์ค่า endTime ถ้าเวลาหมดหรือส่งคำตอบแล้ว
+            if (isSubmitted || timeLeft <= 0) endTimeRef.current = null;
+            return;
+        }
+
+        // ตั้งค่า endTime เมื่อเริ่มต้นจับเวลาเป็นครั้งแรก (อิงจากเวลาปัจจุบัน)
+        if (!endTimeRef.current) {
+            endTimeRef.current = Date.now() + timeLeft * 1000;
+        }
 
         const timerId = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timerId);
-                    handleTimeUp();
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+            const remaining = Math.round((endTimeRef.current - Date.now()) / 1000);
+            
+            if (remaining <= 0) {
+                clearInterval(timerId);
+                setTimeLeft(0);
+                handleTimeUp();
+            } else {
+                setTimeLeft(remaining);
+            }
+        }, 500); // อัปเดตทุก 500ms เพื่อความแม่นยำและตอบสนองได้ดีขึ้นเมื่อสลับ tab
 
         return () => clearInterval(timerId);
-    }, [timeLeft, isSubmitted, proc, isLoadingImages]);
+    }, [isSubmitted, proc, isLoadingImages]);
 
     // Format time function
     const formatTime = (seconds) => {
@@ -121,7 +133,7 @@ export default function MissionEquipment() {
         setScore(0);
         setModalInfo({
             type: 'timeout',
-            title: 'หมดเวลาแล้ว! ⏰',
+            title: 'หมดเวลาแล้ว!',
             message: 'เวลาในการเตรียมอุปกรณ์หมดลงแล้ว ไปสู่ขั้นตอนถัดไปกันเลย'
         });
         setShowModal(true);
@@ -161,8 +173,9 @@ export default function MissionEquipment() {
 
         setSelectedItems(evaluatedItems);
 
-        let calculatedScore = totalCorrectNeeded > 0 ? Math.round(((correctCount - wrongCount) / totalCorrectNeeded) * 30) : 0;
-        calculatedScore = Math.max(0, Math.min(30, calculatedScore));
+        // คำนวณคะแนนเต็ม 40 (หักลบจำนวนที่เลือกผิด)
+        let calculatedScore = totalCorrectNeeded > 0 ? Math.round(((correctCount - wrongCount) / totalCorrectNeeded) * 40) : 0;
+        calculatedScore = Math.max(0, Math.min(40, calculatedScore));
 
         setScore(calculatedScore);
         setIsChecked(true);
@@ -171,6 +184,14 @@ export default function MissionEquipment() {
         const timeSpent = initialTime - timeLeft;
         if (updateMissionEquipmentResult) {
             updateMissionEquipmentResult(proc.id, calculatedScore, timeSpent);
+
+            console.log("Mission Equipment Completed!", {
+                userId: player?.id,
+                procedureId: proc.id,
+                equipmentScore: calculatedScore,
+                timeSpent: timeSpent,
+                status: "pass"
+            });
         }
 
         setShowModal(false);
@@ -245,7 +266,7 @@ export default function MissionEquipment() {
             )}
 
             {/* Overlay */}
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-0"></div>
+            {/* <div className="absolute inset-0 bg-white/40 backdrop-blur-sm z-0"></div> */}
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center pt-24 pb-10 px-4 w-full max-w-5xl mx-auto h-full">
@@ -352,7 +373,7 @@ export default function MissionEquipment() {
                                     {selectedItems.length === 0 ? (
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
                                             <span className="text-3xl mb-2">📥</span>
-                                            <span className="font-medium text-sm">คลิกที่อุปกรณ์ด้านซ้ายเพื่อนำมาจัดเตรียม</span>
+                                            <span className="font-medium text-sm">คลิกที่อุปกรณ์เพื่อนำมาจัดเตรียม</span>
                                         </div>
                                     ) : (
                                         selectedItems.map((item) => (
@@ -389,7 +410,7 @@ export default function MissionEquipment() {
                                         disabled={selectedItems.length === 0 || timeLeft <= 0}
                                         className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedItems.length > 0 && timeLeft > 0 ? 'bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] text-white hover:shadow-lg hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     >
-                                        ส่งคำตอบเพื่อตรวจสอบ
+                                        ส่งคำตอบ
                                     </button>
                                 ) : (
                                     <button

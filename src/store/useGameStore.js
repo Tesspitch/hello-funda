@@ -63,53 +63,65 @@ export const useGameStore = create((set) => ({
 
     // ฟังก์ชันสำหรับบันทึกผลของ MissionEquipment
     updateMissionEquipmentResult: (procedureId, newScore, timeSpent) =>
-        set((state) => ({
-            procedures: {
-                ...state.procedures,
-                [procedureId]: {
-                    ...state.procedures[procedureId],
-                    equipmentStatus: "pass",
-                    equipmentScore: newScore,
-                    equipmentTimeSpent: timeSpent,
+        set((state) => {
+            console.log(`[Store] Mission Equipment Score for ${procedureId}: ${newScore}/40 (Time: ${timeSpent}s)`);
+            return {
+                procedures: {
+                    ...state.procedures,
+                    [procedureId]: {
+                        ...state.procedures[procedureId],
+                        equipmentStatus: "pass",
+                        equipmentScore: newScore,
+                        equipmentTimeSpent: timeSpent,
+                    }
                 }
-            }
-        })),
+            };
+        }),
 
     // ฟังก์ชันสำหรับบันทึกคะแนน Pre-test
     updatePreTestResult: (procedureId, newScore) =>
-        set((state) => ({
-            procedures: {
-                ...state.procedures,
-                [procedureId]: {
-                    ...state.procedures[procedureId],
-                    preTestScore: newScore,
+        set((state) => {
+            console.log(`[Store] Pre-test Score for ${procedureId}: ${newScore}/10`);
+            return {
+                procedures: {
+                    ...state.procedures,
+                    [procedureId]: {
+                        ...state.procedures[procedureId],
+                        preTestScore: newScore,
+                    }
                 }
-            }
-        })),
+            };
+        }),
 
     // ฟังก์ชันสำหรับบันทึกคะแนน Mission Sequence
     updateMissionSequenceResult: (procedureId, newScore) =>
-        set((state) => ({
-            procedures: {
-                ...state.procedures,
-                [procedureId]: {
-                    ...state.procedures[procedureId],
-                    sequenceScore: newScore,
+        set((state) => {
+            console.log(`[Store] Mission Sequence Score for ${procedureId}: ${newScore}/40`);
+            return {
+                procedures: {
+                    ...state.procedures,
+                    [procedureId]: {
+                        ...state.procedures[procedureId],
+                        sequenceScore: newScore,
+                    }
                 }
-            }
-        })),
+            };
+        }),
 
     // ฟังก์ชันสำหรับบันทึกคะแนน Post-test (Quiz)
     updatePostTestResult: (procedureId, newScore) =>
-        set((state) => ({
-            procedures: {
-                ...state.procedures,
-                [procedureId]: {
-                    ...state.procedures[procedureId],
-                    postTestScore: newScore,
+        set((state) => {
+            console.log(`[Store] Post-test Score for ${procedureId}: ${newScore}/10`);
+            return {
+                procedures: {
+                    ...state.procedures,
+                    [procedureId]: {
+                        ...state.procedures[procedureId],
+                        postTestScore: newScore,
+                    }
                 }
-            }
-        })),
+            };
+        }),
 
 
     // เมื่อเล่นจบ 1 หัตถการ ให้ส่งข้อมูลมาอัปเดตผ่านฟังก์ชันนี้
