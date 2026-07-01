@@ -1,6 +1,28 @@
 import n18 from "../assets/img/foley/n18.jpg";
 import nipro from "../assets/img/foley/nipo.jpg";
 
+////////////////////
+////  SUCTION  ////
+//////////////////
+/// TRUE ///
+import sterile_glove from "../assets/img/suction/1_sterile_glove.webp";
+import clean_glove from "../assets/img/suction/2_clean_glove.webp";
+import nns from "../assets/img/suction/3_nns.webp";
+import cotton_bud from "../assets/img/suction/4_5cotton.webp";
+import ambu_bag from "../assets/img/suction/5_ambubag.webp";
+import syring5cc from "../assets/img/suction/6_syring5cc.webp";
+import flow_meter from "../assets/img/suction/7_flowmeter.webp";
+import chada from "../assets/img/suction/8_chada.webp";
+import sterile_water from "../assets/img/suction/9_sterile_water.webp";
+import handgel from "../assets/img/suction/10_handgel.webp";
+import suction_line from "../assets/img/suction/11_suction_line.webp";
+import cotton_ball from "../assets/img/suction/12_5_hard_cotton.webp";
+import stethoscope from "../assets/img/suction/13_stethoscope.webp";
+import kidney_basin from "../assets/img/suction/14_kidney_basin.webp";
+import glass from "../assets/img/suction/15_glass.webp";
+import alcohol_70 from "../assets/img/suction/16_70_alcohol.webp";
+/// FALSE ///
+
 
 // ตั้งเวลา (นาที) สำหรับแต่ละหัตถการและระดับความยาก
 // equipment = เวลาเลือกอุปกรณ์, sequence = เวลาเรียงลำดับหัตถการ
@@ -19,43 +41,31 @@ export const timeConfig = {
     }
 };
 
-// ข้อมูลอุปกรณ์สำหรับแต่ละหัตถการ (ใช้ Emoji เป็น Placeholder ไปก่อน)
+// ข้อมูลอุปกรณ์สำหรับแต่ละหัตถการ
 export const equipmentData = {
     suction: [
-        { id: 1, name: "Sterile glove", icon: "🧤", isCorrect: true },
-        { id: 2, name: "Suction catheter", icon: "🥢", isCorrect: true },
-        { id: 3, name: "Yankauer", icon: "🪄", isCorrect: false },
-        { id: 4, name: "Suction set", icon: "⚙️", isCorrect: true },
-        { id: 5, name: "0.9% NSS", icon: "💧", isCorrect: true },
-        { id: 6, name: "Gauze", icon: "🩹", isCorrect: false },
-        { id: 7, name: "Kidney tray", icon: "🧫", isCorrect: true },
-        { id: 8, name: "Adhesive tape", icon: "🩹", isCorrect: false },
-        { id: 9, name: "Sterile water", icon: "💦", isCorrect: true },
-        { id: 10, name: "Waste bag", icon: "🗑️", isCorrect: true }
+        { id: 1, name: "ถุงมือ Sterile", img: sterile_glove, isCorrect: true },
+        { id: 2, name: "ถุงมือสะอาด", img: clean_glove, isCorrect: true },
+        { id: 3, name: "0.9% NSS", img: nns, isCorrect: true },
+        { id: 4, name: "ไม้พันสำลี 5 ก้าน", img: cotton_bud, isCorrect: true },
+        { id: 5, name: "Ambu Bag", img: ambu_bag, isCorrect: true },
+        { id: 6, name: "Syring 5 cc", img: syring5cc, isCorrect: true },
+        { id: 7, name: "Flow Meter", img: flow_meter, isCorrect: true },
+        { id: 8, name: "ชฎา", img: chada, isCorrect: true },
+        { id: 9, name: "Sterile water 10 cc", img: sterile_water, isCorrect: true },
+        { id: 10, name: "เจลแอลกอฮอล์ล้างมือ", img: handgel, isCorrect: true },
+        { id: 11, name: "สาย Suction", img: suction_line, isCorrect: true },
+        { id: 12, name: "สำลีแห้ง 5 ก้อน", img: cotton_ball, isCorrect: true },
+        { id: 13, name: "Stethoscope", img: stethoscope, isCorrect: true },
+        { id: 14, name: "ถาดรูปไต", img: kidney_basin, isCorrect: true },
+        { id: 15, name: "แก้วน้ำ", img: glass, isCorrect: true },
+        { id: 16, name: "70% Alcohol", img: alcohol_70, isCorrect: true }
     ],
     foley_catheter: [
-        { id: 11, name: "Foley Catheter", icon: "🥢" },
-        { id: 12, name: "Urine bag", icon: "🛍️" },
-        { id: 13, name: "Sterile glove", icon: "🧤" },
-        { id: 14, name: "Syringe 10ml", img: n18 },
-        { id: 15, name: "Nipro", img: nipro },
-        { id: 16, name: "K-Y Jelly", icon: "🧴" },
-        { id: 17, name: "Savlon/Betadine", icon: "🩸" },
-        { id: 18, name: "Cotton balls", icon: "☁️" },
-        { id: 19, name: "Forceps", icon: "✂️" },
-        { id: 20, name: "Kidney tray", icon: "🧫" }
+
     ],
     ng_tube: [
-        { id: 21, name: "NG Tube", icon: "🥢" },
-        { id: 22, name: "Syringe 50ml", icon: "💉" },
-        { id: 23, name: "Stethoscope", icon: "🩺" },
-        { id: 24, name: "K-Y Jelly", icon: "🧴" },
-        { id: 25, name: "Clean glove", icon: "🧤" },
-        { id: 26, name: "Adhesive tape", icon: "🩹" },
-        { id: 27, name: "Glass of water", icon: "🥛" },
-        { id: 28, name: "Flashlight", icon: "🔦" },
-        { id: 29, name: "Towel", icon: "🧣" },
-        { id: 30, name: "Kidney tray", icon: "🧫" }
+
     ]
 };
 

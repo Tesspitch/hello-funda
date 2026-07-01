@@ -19,6 +19,7 @@ export default function MissionEquipment() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isChecked, setIsChecked] = useState(false); // added isChecked state
     const [score, setScore] = useState(0);
+    const [mistakesCount, setMistakesCount] = useState(0);
 
     // Get time from config (minutes to seconds), fallback to 120 (2 mins) if not found
     const initialTime = (proc && diffId && timeConfig[proc.id]?.[diffId]?.equipment)
@@ -103,24 +104,35 @@ export default function MissionEquipment() {
 
         setSelectedItems(evaluatedItems);
 
-        // อัปเดตคะแนนและสถานะการตรวจทุกครั้งที่กดส่ง
-        setScore(correctCount * 10);
-        setIsChecked(true);
-
         const isAllCorrect = !hasError && correctCount === totalCorrectNeeded;
+        
+        let currentMistakes = mistakesCount;
+        if (!isAllCorrect) {
+            currentMistakes += 1;
+            setMistakesCount(currentMistakes);
+        }
+
+        // อัปเดตคะแนนและสถานะการตรวจทุกครั้งที่กดส่ง
+        let calculatedScore = totalCorrectNeeded > 0 ? Math.round((correctCount / totalCorrectNeeded) * 100) : 0;
+        
+        // หักคะแนน 10 คะแนนต่อการตอบผิด 1 ครั้ง (คะแนนต่ำสุดคือ 0)
+        calculatedScore = Math.max(0, calculatedScore - (currentMistakes * 10));
+        
+        setScore(calculatedScore);
+        setIsChecked(true);
 
         if (isAllCorrect) {
             setIsSubmitted(true); // ล็อคหน้าจอ
             
             const timeSpent = initialTime - timeLeft;
             if (updateMissionEquipmentResult) {
-                updateMissionEquipmentResult(proc.id, correctCount * 10, timeSpent);
+                updateMissionEquipmentResult(proc.id, calculatedScore, timeSpent);
                 
                 // แสดงข้อมูลใน console ตามที่ต้องการ
                 console.log("Mission Passed!", {
                     userId: player?.id,
                     procedureId: proc.id,
-                    score: correctCount * 10,
+                    score: calculatedScore,
                     timeSpent: timeSpent,
                     status: "pass"
                 });
@@ -154,6 +166,7 @@ export default function MissionEquipment() {
             setSelectedItems([]);
             setIsChecked(false);
             setScore(0);
+            setMistakesCount(0);
         } else {
             // ตอบผิด เมื่อปิด Modal ให้เคลียร์ชิ้นที่ผิดออกทันที
             if (isChecked) {

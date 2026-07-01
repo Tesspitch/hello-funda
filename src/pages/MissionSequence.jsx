@@ -6,4 +6,4 @@ export default function MissionSequence() {
             <h1 className="text-3xl font-bold text-primary">Mission Sequence</h1>
         </div>
     );
-}
+}   
