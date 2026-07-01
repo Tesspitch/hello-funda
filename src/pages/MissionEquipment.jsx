@@ -8,6 +8,7 @@ export default function MissionEquipment() {
     const location = useLocation();
     const navigate = useNavigate();
     const player = useGameStore((state) => state.player);
+    const updateMissionEquipmentResult = useGameStore((state) => state.updateMissionEquipmentResult);
 
     // ดึงข้อมูลที่ส่งมาจากหน้า SelectProcedure
     const stateData = location.state;
@@ -110,10 +111,25 @@ export default function MissionEquipment() {
 
         if (isAllCorrect) {
             setIsSubmitted(true); // ล็อคหน้าจอ
+            
+            const timeSpent = initialTime - timeLeft;
+            if (updateMissionEquipmentResult) {
+                updateMissionEquipmentResult(proc.id, correctCount * 10, timeSpent);
+                
+                // แสดงข้อมูลใน console ตามที่ต้องการ
+                console.log("Mission Passed!", {
+                    userId: player?.id,
+                    procedureId: proc.id,
+                    score: correctCount * 10,
+                    timeSpent: timeSpent,
+                    status: "pass"
+                });
+            }
+
             setModalInfo({
                 type: 'success',
                 title: '🎉 ยอดเยี่ยมมาก!',
-                message: 'คุณเตรียมอุปกรณ์ได้ถูกต้องและครบถ้วน! พร้อมสำหรับภารกิจต่อไปแล้ว'
+                message: `คุณเตรียมอุปกรณ์ได้ถูกต้องและครบถ้วน! ใช้เวลาไป ${formatTime(timeSpent)} นาที พร้อมสำหรับภารกิจต่อไปแล้ว`
             });
             setShowModal(true);
         } else {

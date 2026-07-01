@@ -16,7 +16,13 @@ export default function InputName() {
     };
 
     const handleConfirm = () => {
-        setPlayerId(inputId.trim());
+        const studentId = inputId.trim();
+        setPlayerId(studentId);
+        
+        console.log("User Input Name / ID Submitted:", {
+            studentId: studentId
+        });
+        
         navigate("/select");
     };
 

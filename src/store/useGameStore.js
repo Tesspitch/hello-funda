@@ -14,6 +14,9 @@ const initialGameState = {
             id: "suction",
             name: "Suction",
             status: "pending",
+            equipmentStatus: "not_done",
+            equipmentScore: 0,
+            equipmentTimeSpent: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -22,6 +25,9 @@ const initialGameState = {
             id: "foley_catheter",
             name: "Foley Catheter",
             status: "pending",
+            equipmentStatus: "not_done",
+            equipmentScore: 0,
+            equipmentTimeSpent: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -30,6 +36,9 @@ const initialGameState = {
             id: "ng_tube",
             name: "NG Tube",
             status: "pending",
+            equipmentStatus: "not_done",
+            equipmentScore: 0,
+            equipmentTimeSpent: 0,
             score: 0,
             timeSpentSeconds: 0,
             badgeEarned: false
@@ -42,6 +51,20 @@ export const useGameStore = create((set) => ({
     ...initialGameState,
 
     // --- ฟังก์ชันสำหรับรับ Input เพื่ออัปเดตข้อมูล ---
+
+    // ฟังก์ชันสำหรับบันทึกผลของ MissionEquipment
+    updateMissionEquipmentResult: (procedureId, newScore, timeSpent) =>
+        set((state) => ({
+            procedures: {
+                ...state.procedures,
+                [procedureId]: {
+                    ...state.procedures[procedureId],
+                    equipmentStatus: "pass",
+                    equipmentScore: newScore,
+                    equipmentTimeSpent: timeSpent,
+                }
+            }
+        })),
 
     // เมื่อเล่นจบ 1 หัตถการ ให้ส่งข้อมูลมาอัปเดตผ่านฟังก์ชันนี้
     updateProcedureResult: (procedureId, newScore, timeSpent) =>

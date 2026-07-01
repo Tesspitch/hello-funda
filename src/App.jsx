@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 
 import InputName from './pages/InputName';
 import Home from './pages/Home';
@@ -14,35 +14,33 @@ import ProtectedRoute from './components/ProtectedRoute';
 import BackButton from './components/BackButton';
 import BGMPlayer from './components/BGMPlayer';
 
-function App() {
-  return (
-    <BrowserRouter>
-
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
       <div className="min-h-screen font-sans text-gray-800 font-medium">
-        
-        {/* Global Components */}
         <BGMPlayer />
         <BackButton />
-
-        {/* 2. กำหนดเส้นทาง (Routes) */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/input-name" element={<InputName />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/select" element={<ProtectedRoute><SelectProcedure /></ProtectedRoute>} />
-          <Route path="/mission-equipment" element={<ProtectedRoute><MissionEquipment /></ProtectedRoute>} />
-          <Route path="/mission-sequence" element={<ProtectedRoute><MissionSequence /></ProtectedRoute>} />
-          <Route path="/quiz" element={<ProtectedRoute><QuizPhase /></ProtectedRoute>} />
-          <Route path="/quiz-score" element={<ProtectedRoute><QuizScore /></ProtectedRoute>} />
-          <Route path="/simulation-score" element={<ProtectedRoute><SimulationScore /></ProtectedRoute>} />
-          
-          {/* Catch-all route สำหรับหน้าที่ไม่มีอยู่จริง (404 Not Found) */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-
+        <Outlet />
       </div>
-    </BrowserRouter>
-  );
+    ),
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "input-name", element: <InputName /> },
+      { path: "dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
+      { path: "select", element: <ProtectedRoute><SelectProcedure /></ProtectedRoute> },
+      { path: "mission-equipment", element: <ProtectedRoute><MissionEquipment /></ProtectedRoute> },
+      { path: "mission-sequence", element: <ProtectedRoute><MissionSequence /></ProtectedRoute> },
+      { path: "quiz", element: <ProtectedRoute><QuizPhase /></ProtectedRoute> },
+      { path: "quiz-score", element: <ProtectedRoute><QuizScore /></ProtectedRoute> },
+      { path: "simulation-score", element: <ProtectedRoute><SimulationScore /></ProtectedRoute> },
+      { path: "*", element: <NotFound /> }
+    ]
+  }
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;

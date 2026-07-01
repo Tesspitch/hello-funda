@@ -148,6 +148,13 @@ export default function SelectProcedure() {
 
     const handleConfirmStart = () => {
         if (!pendingSelection) return;
+        
+        console.log("Procedure Selected & Started:", {
+            userId: player?.id,
+            procedureId: pendingSelection.proc.id,
+            difficultyId: pendingSelection.diffId
+        });
+        
         navigate("/mission-equipment", {
             state: {
                 proc: pendingSelection.proc,

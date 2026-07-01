@@ -1,80 +1,85 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useBlocker } from 'react-router-dom';
 import '../index.css';
 
 export default function BackButton() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [showConfirm, setShowConfirm] = useState(false);
+    
+    // For manual UI overrides (PUSH/REPLACE navigations treated as "Back")
+    const [uiPendingDest, setUiPendingDest] = useState(null);
 
     // อย่าโชว์ปุ่ม Back ในหน้าแรก (Home)
-    if (location.pathname === '/') {
-        return null;
-    }
+    const isHome = location.pathname === '/';
+
+    // Intercept browser back button (POP) on any page except home
+    const blocker = useBlocker(
+        ({ historyAction, currentLocation }) => {
+            if (currentLocation.pathname === '/') return false;
+            return historyAction === 'POP';
+        }
+    );
 
     const handleBackClick = () => {
-        // เงื่อนไขพิเศษ: หน้า dashboard ให้ย้อนไป /select เท่านั้น
+        // เงื่อนไขพิเศษเพื่อให้ UI Back ไปที่หน้าที่ต้องการอย่างถูกต้อง
         if (location.pathname === '/dashboard') {
-            navigate('/select');
-            return;
-        }
-        
-        // เงื่อนไขพิเศษ: หน้า input-name ให้ย้อนไป home (/) 
-        if (location.pathname === '/input-name') {
-            navigate('/');
-            return;
-        }
-
-        // หน้าที่ต้องการให้ยืนยันก่อนย้อนกลับ
-        if (location.pathname === '/select' || location.pathname === '/mission-equipment') {
-            setShowConfirm(true);
+            setUiPendingDest('/select');
+        } else if (location.pathname === '/input-name') {
+            setUiPendingDest('/');
+        } else if (location.pathname === '/select') {
+            setUiPendingDest('/input-name');
         } else {
+            // หน้าอื่นๆ ใช้ navigate(-1) ซึ่งจะถูก useBlocker จับได้เมื่อเป็น POP
             navigate(-1);
         }
     };
 
     const confirmBack = () => {
-        setShowConfirm(false);
-        
-        // เงื่อนไขพิเศษ: หน้า select ให้ย้อนไปหน้า inputname
-        if (location.pathname === '/select') {
-            navigate('/input-name');
-        } else {
-            navigate(-1);
+        if (uiPendingDest) {
+            navigate(uiPendingDest);
+            setUiPendingDest(null);
+        } else if (blocker.state === 'blocked') {
+            blocker.proceed();
         }
     };
 
     const cancelBack = () => {
-        setShowConfirm(false);
+        if (uiPendingDest) {
+            setUiPendingDest(null);
+        } else if (blocker.state === 'blocked') {
+            blocker.reset();
+        }
     };
+
+    const isModalOpen = uiPendingDest !== null || blocker.state === 'blocked';
 
     return (
         <>
-            <button className="global-back-btn" onClick={handleBackClick} title="ย้อนกลับ">
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="3" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    className="back-btn-icon"
-                >
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
-            </button>
+            {!isHome && (
+                <button className="global-back-btn" onClick={handleBackClick} title="ย้อนกลับ">
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="3" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        className="back-btn-icon"
+                    >
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+            )}
 
             {/* Modal ยืนยันการย้อนกลับ */}
-            {showConfirm && (
+            {isModalOpen && (
                 <div className="modal-overlay" onClick={cancelBack} style={{ zIndex: 10000 }}>
                     <div className="modal-card animate-pop-in" onClick={(e) => e.stopPropagation()}>
                         <div className="text-5xl mb-4">⚠️</div>
                         <p className="modal-title text-xl font-bold mb-2">ยืนยันการย้อนกลับ</p>
                         <p className="modal-subtitle text-gray-600 mb-6">
-                            {location.pathname === '/mission-equipment' 
-                                ? "ข้อมูลการเตรียมอุปกรณ์และการจับเวลาจะถูกยกเลิก คุณแน่ใจหรือไม่ที่จะย้อนกลับ?"
-                                : "คุณแน่ใจหรือไม่ที่จะย้อนกลับไปหน้าก่อนหน้า?"}
+                            ข้อมูลการทำภารกิจหรือสถานะปัจจุบันอาจสูญหาย คุณแน่ใจหรือไม่ที่จะย้อนกลับ?
                         </p>
                         <div className="modal-buttons flex gap-3">
                             <button className="modal-btn modal-btn-cancel flex-1 py-3 rounded-full bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors" onClick={cancelBack}>
