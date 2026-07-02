@@ -121,16 +121,16 @@ export default function Dashboard() {
                 {/* Header Section */}
                 <div className="flex flex-col items-center mb-8">
                     <img src={logo} alt="Hello Funda" className="w-[180px] md:w-[220px] mb-4 drop-shadow-md animate-logo-float" />
-                    <div className="bg-white/90 backdrop-blur-sm px-8 py-3 rounded-full shadow-md border-2 border-blue-100">
+                    <div className="bg-white/90 backdrop-blur-sm px-8 py-3 rounded-full shadow-md border-2 border-rose-100">
                         <span className="text-gray-500 font-bold mr-2">Student ID:</span>
                         <span className="text-[#FB8682] font-black text-xl tracking-wider">{player?.id || "N/A"}</span>
                     </div>
                 </div>
 
                 {/* Scoreboard Card */}
-                <div className="bg-white/95 backdrop-blur-md rounded-[32px] shadow-2xl w-full p-6 md:p-10 border border-blue-50 relative">
+                <div className="bg-white/95 backdrop-blur-md rounded-[32px] shadow-2xl w-full p-6 md:p-10 border border-rose-50 relative">
                     <div className="flex items-center justify-between mb-8 border-b border-gray-100 pb-4">
-                        <h2 className="text-2xl md:text-3xl font-black text-[#1e3a8a] flex items-center gap-3">
+                        <h2 className="text-2xl md:text-3xl font-black text-rose-900 flex items-center gap-3">
                             สรุปผลคะแนนภารกิจ
                         </h2>
                     </div>
@@ -171,7 +171,7 @@ export default function Dashboard() {
 
                                     <h3 className="text-lg font-bold text-gray-800 mb-5">{proc.name}</h3>
 
-                                    <div className="w-full bg-white rounded-xl py-3 px-2 shadow-sm mt-auto border border-blue-100 text-blue-500 font-bold text-sm transition-colors group-hover:bg-blue-50 flex items-center justify-center gap-2">
+                                    <div className="w-full bg-white rounded-xl py-3 px-2 shadow-sm mt-auto border border-rose-100 text-[#FB8682] font-bold text-sm transition-colors group-hover:bg-rose-50 flex items-center justify-center gap-2">
                                         <span>คลิกดูรายละเอียด</span>
                                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
                                     </div>

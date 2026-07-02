@@ -195,16 +195,16 @@ export default function MissionSequence() {
             {/* Loading Overlay */}
             {isLoading && (
                 <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white/90 backdrop-blur-md px-4">
-                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-blue-100 border-t-[#3b82f6] rounded-full animate-spin shadow-sm"></div>
-                    <h2 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">กำลังเตรียมภารกิจจัดลำดับ...</h2>
+                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-rose-100 border-t-[#FB8682] rounded-full animate-spin shadow-sm"></div>
+                    <h2 className="text-2xl font-bold text-rose-900 mb-2 text-center">กำลังเตรียมภารกิจจัดลำดับ...</h2>
                     <p className="text-gray-500 mb-6 text-center text-sm md:text-base">รอสักครู่ ระบบกำลังจัดเตรียมข้อมูลขั้นตอนการทำหัตถการ</p>
                     <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                         <div
-                            className="h-full bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] transition-all duration-300"
+                            className="h-full bg-gradient-to-r from-[#FB8682] to-[#f4605b] transition-all duration-300"
                             style={{ width: `${loadingProgress}%` }}
                         ></div>
                     </div>
-                    <p className="mt-2 text-sm font-bold text-[#3b82f6]">{loadingProgress}%</p>
+                    <p className="mt-2 text-sm font-bold text-[#FB8682]">{loadingProgress}%</p>
                 </div>
             )}
 
@@ -212,9 +212,9 @@ export default function MissionSequence() {
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="flex justify-center mb-4 text-blue-500">
+                        <div className="flex justify-center mb-4 text-[#FB8682]">
                             {modalInfo.type === 'confirm' ? (
-                                <svg className="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg className="w-16 h-16 text-[#FB8682]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             ) : modalInfo.type === 'timeout' ? (
                                 <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             ) : (
@@ -234,7 +234,7 @@ export default function MissionSequence() {
                                 </button>
                                 <button
                                     onClick={confirmSubmit}
-                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-md"
+                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-[#FB8682] hover:bg-[#f4605b] transition-colors shadow-md"
                                 >
                                     ยืนยัน
                                 </button>
@@ -242,7 +242,7 @@ export default function MissionSequence() {
                         ) : (
                             <button
                                 onClick={handleModalClose}
-                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-blue-500 hover:bg-blue-600"
+                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-[#FB8682] hover:bg-[#f4605b]"
                             >
                                 ไปต่อ
                             </button>
@@ -273,7 +273,7 @@ export default function MissionSequence() {
                 </div>
 
                 {/* Main UI Frame */}
-                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-blue-50'} flex-1`}>
+                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-rose-50'} flex-1`}>
 
                     {timeLeft <= 10 && !isSubmitted && (
                         <div className="absolute inset-0 pointer-events-none z-0 bg-red-500/5 animate-pulse rounded-[32px]"></div>
@@ -282,14 +282,14 @@ export default function MissionSequence() {
                     {/* Header */}
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-[#1e3a8a] mb-1">Mission 2 : จัดลำดับขั้นตอน</h2>
+                            <h2 className="text-2xl font-bold text-rose-900 mb-1">Mission 2 : จัดลำดับขั้นตอน</h2>
                             <p className="text-gray-600 text-sm font-medium">กดคลิกเพื่อเลือกขั้นตอน หรือลากสลับตำแหน่งให้ถูกต้อง</p>
                         </div>
                         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${timeLeft <= 10 && !isSubmitted
                             ? 'bg-red-50 text-white border-red-600 bg-red-500 animate-timer-urgent scale-110'
                             : timeLeft <= 30 && !isSubmitted
                                 ? 'bg-red-50 text-red-600 border-red-200 animate-pulse'
-                                : 'bg-blue-50 text-[#1e3a8a] border-blue-100'
+                                : 'bg-rose-50 text-rose-900 border-rose-100'
                             }`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -303,9 +303,9 @@ export default function MissionSequence() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-[500px]">
 
                             {/* Left Column: Available Steps */}
-                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-blue-50 flex flex-col h-full">
+                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-rose-50 flex flex-col h-full">
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-[#3b82f6] font-bold text-lg">ขั้นตอนที่รอจัดเรียง ({availableSteps.length})</h3>
+                                    <h3 className="text-[#FB8682] font-bold text-lg">ขั้นตอนที่รอจัดเรียง ({availableSteps.length})</h3>
                                 </div>
                                 <div className="flex-1 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar flex flex-col gap-3">
                                     {availableSteps.length === 0 ? (
@@ -318,9 +318,9 @@ export default function MissionSequence() {
                                             <div
                                                 key={step.dndId}
                                                 onClick={() => handleAddStep(step)}
-                                                className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group flex items-start gap-3"
+                                                className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-[#FB8682] hover:shadow-md transition-all group flex items-start gap-3"
                                             >
-                                                <div className="bg-blue-50 text-blue-500 w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                                <div className="bg-rose-50 text-[#FB8682] w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 group-hover:bg-[#FB8682] group-hover:text-white transition-colors">
                                                     +
                                                 </div>
                                                 <p className="text-gray-700 text-sm leading-relaxed">{step.text}</p>
@@ -331,9 +331,9 @@ export default function MissionSequence() {
                             </div>
 
                             {/* Right Column: Ordered Steps */}
-                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-blue-50 flex flex-col h-full">
+                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-rose-50 flex flex-col h-full">
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-[#3b82f6] font-bold text-lg">ลำดับขั้นตอน ({selectedSteps.length})</h3>
+                                    <h3 className="text-[#FB8682] font-bold text-lg">ลำดับขั้นตอน ({selectedSteps.length})</h3>
                                     {!isSubmitted && selectedSteps.length > 0 && (
                                         <button
                                             onClick={() => {
@@ -352,7 +352,7 @@ export default function MissionSequence() {
                                         <div
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
-                                            className={`flex-1 border-2 border-dashed rounded-xl p-3 flex flex-col gap-2 overflow-y-auto max-h-[500px] custom-scrollbar transition-colors ${snapshot.isDraggingOver ? 'bg-blue-50 border-blue-400' : 'bg-white border-blue-200'
+                                            className={`flex-1 border-2 border-dashed rounded-xl p-3 flex flex-col gap-2 overflow-y-auto max-h-[500px] custom-scrollbar transition-colors ${snapshot.isDraggingOver ? 'bg-rose-50 border-[#FB8682]' : 'bg-white border-rose-200'
                                                 }`}
                                         >
                                             {selectedSteps.length === 0 && !snapshot.isDraggingOver ? (
@@ -375,7 +375,7 @@ export default function MissionSequence() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                             onClick={() => handleRemoveStep(step)}
-                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-center gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg border-blue-500 rotate-1 z-50' : 'shadow-sm border-gray-200 hover:border-red-300'
+                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-center gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg border-[#FB8682] rotate-1 z-50' : 'shadow-sm border-gray-200 hover:border-red-300'
                                                                 } ${isSubmitted ? 'cursor-default pointer-events-none' : 'cursor-grab active:cursor-grabbing'}`}
                                                             style={{
                                                                 ...provided.draggableProps.style,
@@ -385,7 +385,7 @@ export default function MissionSequence() {
                                                             {/* Step Number Badge */}
                                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-sm ${isSubmitted
                                                                 ? (step.isCorrect ? 'bg-green-100 text-green-600 border border-green-200' : 'bg-red-100 text-red-600 border border-red-200')
-                                                                : 'bg-blue-100 text-blue-700'
+                                                                : 'bg-rose-100 text-rose-700'
                                                                 }`}>
                                                                 {index + 1}
                                                             </div>
@@ -421,7 +421,7 @@ export default function MissionSequence() {
                                             onClick={handleSubmitClick}
                                             disabled={selectedSteps.length === 0 || timeLeft <= 0}
                                             className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
-                                                ? 'bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] text-white hover:shadow-lg hover:-translate-y-0.5'
+                                                ? 'bg-gradient-to-r from-[#FB8682] to-[#f4605b] text-white hover:shadow-lg hover:-translate-y-0.5'
                                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                                 }`}
                                         >

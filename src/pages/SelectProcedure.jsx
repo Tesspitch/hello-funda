@@ -159,7 +159,7 @@ export default function SelectProcedure() {
                     {player?.id && (
                         <div
                             onClick={() => navigate('/dashboard')}
-                            className="proc-page-user-label !mb-0 cursor-pointer transition-all hover:scale-105 hover:shadow-md border-2 border-transparent hover:border-blue-300 flex items-center gap-2"
+                            className="proc-page-user-label !mb-0 cursor-pointer transition-all hover:scale-105 hover:shadow-md border-2 border-transparent hover:border-[#FB8682] flex items-center gap-2"
                             title="คลิกเพื่อดูผลคะแนนของคุณ"
                         >
                             <span>Student ID: <span>{player.id}</span></span>

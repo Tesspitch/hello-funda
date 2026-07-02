@@ -216,16 +216,16 @@ export default function MissionEquipment() {
             {/* Loading Overlay */}
             {isLoadingImages && (
                 <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white/90 backdrop-blur-md px-4">
-                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-blue-100 border-t-[#3b82f6] rounded-full animate-spin shadow-sm"></div>
-                    <h2 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">กำลังเตรียมอุปกรณ์...</h2>
+                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-rose-100 border-t-[#FB8682] rounded-full animate-spin shadow-sm"></div>
+                    <h2 className="text-2xl font-bold text-rose-900 mb-2 text-center">กำลังเตรียมอุปกรณ์...</h2>
                     <p className="text-gray-500 mb-6 text-center text-sm md:text-base">รอสักครู่ ระบบกำลังจัดเตรียมภาพอุปกรณ์ให้ครบถ้วน</p>
                     <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                         <div
-                            className="h-full bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] transition-all duration-300"
+                            className="h-full bg-gradient-to-r from-[#FB8682] to-[#f4605b] transition-all duration-300"
                             style={{ width: `${loadingProgress}%` }}
                         ></div>
                     </div>
-                    <p className="mt-2 text-sm font-bold text-[#3b82f6]">{loadingProgress}%</p>
+                    <p className="mt-2 text-sm font-bold text-[#FB8682]">{loadingProgress}%</p>
                 </div>
             )}
 
@@ -233,9 +233,9 @@ export default function MissionEquipment() {
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="flex justify-center mb-4 text-blue-500">
+                        <div className="flex justify-center mb-4 text-[#FB8682]">
                             {modalInfo.type === 'confirm' ? (
-                                <svg className="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg className="w-16 h-16 text-[#FB8682]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             ) : (
                                 <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             )}
@@ -253,7 +253,7 @@ export default function MissionEquipment() {
                                 </button>
                                 <button
                                     onClick={confirmSubmit}
-                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-blue-500 hover:bg-blue-600 transition-colors shadow-md"
+                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-[#FB8682] hover:bg-[#f4605b] transition-colors shadow-md"
                                 >
                                     ยืนยัน
                                 </button>
@@ -261,7 +261,7 @@ export default function MissionEquipment() {
                         ) : (
                             <button
                                 onClick={handleModalClose}
-                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-blue-500 hover:bg-blue-600"
+                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-[#FB8682] hover:bg-[#f4605b]"
                             >
                                 ไปต่อ
                             </button>
@@ -295,7 +295,7 @@ export default function MissionEquipment() {
                 </div>
 
                 {/* Main UI Frame (Matching the screenshot) */}
-                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-blue-50'}`}>
+                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-rose-50'}`}>
 
                     {/* Urgent Screen Flash Effect */}
                     {timeLeft <= 10 && !isSubmitted && (
@@ -305,14 +305,14 @@ export default function MissionEquipment() {
                     {/* Header: Title and Timer */}
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-[#1e3a8a] mb-1">Mission 1 : เลือกอุปกรณ์ให้ครบ</h2>
+                            <h2 className="text-2xl font-bold text-rose-900 mb-1">Mission 1 : เลือกอุปกรณ์ให้ครบ</h2>
                             <p className="text-gray-600 text-sm font-medium">เลือกอุปกรณ์ที่ต้องใช้ในหัตถการให้ครบถ้วน</p>
                         </div>
                         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${timeLeft <= 10 && !isSubmitted
                             ? 'bg-red-500 text-white border-red-600 animate-timer-urgent scale-110'
                             : timeLeft <= 30 && !isSubmitted
                                 ? 'bg-red-50 text-red-600 border-red-200 animate-pulse'
-                                : 'bg-blue-50 text-[#1e3a8a] border-blue-100'
+                                : 'bg-rose-50 text-rose-900 border-rose-100'
                             }`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -325,8 +325,8 @@ export default function MissionEquipment() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 flex-1">
 
                         {/* Left Column: All Equipment */}
-                        <div className="bg-[#f8fafc] rounded-2xl p-5 border border-blue-50 flex flex-col">
-                            <h3 className="text-[#3b82f6] font-bold mb-4 text-lg">อุปกรณ์ทั้งหมด</h3>
+                        <div className="bg-[#f8fafc] rounded-2xl p-5 border border-rose-50 flex flex-col">
+                            <h3 className="text-[#FB8682] font-bold mb-4 text-lg">อุปกรณ์ทั้งหมด</h3>
                             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar content-start">
                                 {currentEquipmentList.map((item) => {
                                     const isSelected = selectedItems.some((i) => i.id === item.id);
@@ -334,10 +334,10 @@ export default function MissionEquipment() {
                                         <div
                                             key={item.id}
                                             onClick={() => toggleItem(item)}
-                                            className={`relative flex flex-col items-center justify-center p-4 rounded-2xl shadow-sm border cursor-pointer transition-all ${isSelected ? 'bg-blue-50 border-blue-400 scale-[0.98]' : 'bg-white border-gray-100 hover:border-blue-200 hover:shadow-md'}`}
+                                            className={`relative flex flex-col items-center justify-center p-4 rounded-2xl shadow-sm border cursor-pointer transition-all ${isSelected ? 'bg-rose-50 border-[#FB8682] scale-[0.98]' : 'bg-white border-gray-100 hover:border-rose-200 hover:shadow-md'}`}
                                         >
                                             {/* Checkbox badge */}
-                                            <div className={`absolute top-2 right-2 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-blue-500 bg-blue-500 text-white' : 'border-gray-300'}`}>
+                                            <div className={`absolute top-2 right-2 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-[#FB8682] bg-[#FB8682] text-white' : 'border-gray-300'}`}>
                                                 {isSelected && <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
                                             </div>
 
@@ -356,9 +356,9 @@ export default function MissionEquipment() {
                         </div>
 
                         {/* Right Column: Selected Equipment (Drag Drop Area) */}
-                        <div className="bg-[#f8fafc] rounded-2xl p-5 border border-blue-50 flex flex-col">
+                        <div className="bg-[#f8fafc] rounded-2xl p-5 border border-rose-50 flex flex-col">
                             <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-[#3b82f6] font-bold text-lg">อุปกรณ์ที่เลือก</h3>
+                                <h3 className="text-[#FB8682] font-bold text-lg">อุปกรณ์ที่เลือก</h3>
                                 {!isSubmitted && selectedItems.length > 0 && (
                                     <button
                                         onClick={() => {
@@ -373,7 +373,7 @@ export default function MissionEquipment() {
                                 )}
                             </div>
 
-                            <div className="flex-1 border-2 border-dashed border-blue-300 rounded-xl bg-white flex flex-col items-center justify-center p-4 min-h-[250px]">
+                            <div className="flex-1 border-2 border-dashed border-rose-300 rounded-xl bg-white flex flex-col items-center justify-center p-4 min-h-[250px]">
                                 <div className="w-full h-full bg-gray-50 rounded-xl border border-gray-200 p-4 shadow-inner relative flex flex-wrap content-start gap-3 overflow-y-auto">
                                     {selectedItems.length === 0 ? (
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
@@ -407,7 +407,7 @@ export default function MissionEquipment() {
                             </div>
 
                             <div className="mt-4 flex flex-col items-center gap-2">
-                                <div className="bg-blue-50 text-[#3b82f6] px-8 py-2.5 rounded-full font-bold text-sm min-w-[150px] text-center border border-blue-100">
+                                <div className="bg-rose-50 text-[#FB8682] px-8 py-2.5 rounded-full font-bold text-sm min-w-[150px] text-center border border-rose-100">
                                     {selectedItems.length} ชิ้นที่ถูกเลือก
                                 </div>
 
@@ -417,7 +417,7 @@ export default function MissionEquipment() {
                                     <button
                                         onClick={handleSubmit}
                                         disabled={selectedItems.length === 0 || timeLeft <= 0}
-                                        className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedItems.length > 0 && timeLeft > 0 ? 'bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] text-white hover:shadow-lg hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                                        className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedItems.length > 0 && timeLeft > 0 ? 'bg-gradient-to-r from-[#FB8682] to-[#f4605b] text-white hover:shadow-lg hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     >
                                         ส่งคำตอบ
                                     </button>
