@@ -126,9 +126,10 @@ export default function MissionEquipment() {
     }
 
     const handleTimeUp = () => {
+        setIsChecked(true);
         setIsSubmitted(true);
         if (updateMissionEquipmentResult) {
-            updateMissionEquipmentResult(proc.id, 0, initialTime);
+            updateMissionEquipmentResult(proc.id, diffId, 0, initialTime);
         }
         setScore(0);
         setModalInfo({
@@ -183,7 +184,7 @@ export default function MissionEquipment() {
 
         const timeSpent = initialTime - timeLeft;
         if (updateMissionEquipmentResult) {
-            updateMissionEquipmentResult(proc.id, calculatedScore, timeSpent);
+            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, timeSpent);
 
             console.log("Mission Equipment Completed!", {
                 userId: player?.id,

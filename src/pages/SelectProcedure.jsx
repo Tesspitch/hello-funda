@@ -155,8 +155,9 @@ export default function SelectProcedure() {
             difficultyId: pendingSelection.diffId
         });
         
-        navigate("/mission-equipment", {
+        navigate("/quiz", {
             state: {
+                type: 'pre',
                 proc: pendingSelection.proc,
                 diffId: pendingSelection.diffId
             }
