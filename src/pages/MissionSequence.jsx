@@ -21,6 +21,9 @@ export default function MissionSequence() {
     const [availableSteps, setAvailableSteps] = useState([]);
     const [selectedSteps, setSelectedSteps] = useState([]);
 
+    const [currentPartIndex, setCurrentPartIndex] = useState(0);
+    const [allSelectedSteps, setAllSelectedSteps] = useState({});
+
     // Timer State
     const initialTime = (proc && diffId && timeConfig[proc.id]?.[diffId]?.sequence)
         ? timeConfig[proc.id][diffId].sequence * 60
@@ -44,12 +47,18 @@ export default function MissionSequence() {
                 progress = 100;
                 clearInterval(interval);
 
-                // Shuffle sequence data
-                const originalData = sequenceData[proc.id] || [];
-                const shuffled = [...originalData].sort(() => Math.random() - 0.5);
+                // Shuffle sequence data for the FIRST PART
+                const parts = sequenceData[proc.id] || [];
+                if (parts.length > 0) {
+                    const originalData = parts[0].steps || [];
+                    const shuffled = [...originalData].sort(() => Math.random() - 0.5);
 
-                // Add a unique key for drag and drop to avoid React key issues
-                setAvailableSteps(shuffled.map(item => ({ ...item, dndId: `dnd-${item.id}` })));
+                    // Add a unique key for drag and drop to avoid React key issues
+                    setAvailableSteps(shuffled.map(item => ({ ...item, dndId: `dnd-${item.id}` })));
+                    setSelectedSteps([]);
+                    setCurrentPartIndex(0);
+                    setAllSelectedSteps({});
+                }
 
                 setTimeout(() => setIsLoading(false), 400);
             }
@@ -135,35 +144,81 @@ export default function MissionSequence() {
     };
 
     // --- Submit Logic ---
+    const handleNextPart = () => {
+        setAllSelectedSteps(prev => ({ ...prev, [currentPartIndex]: selectedSteps }));
+        const nextIndex = currentPartIndex + 1;
+        const parts = sequenceData[proc.id] || [];
+        if (nextIndex < parts.length) {
+            const nextOriginal = parts[nextIndex].steps || [];
+            const savedNextSteps = allSelectedSteps[nextIndex];
+            if (savedNextSteps) {
+                setSelectedSteps(savedNextSteps);
+                const savedIds = savedNextSteps.map(s => s.id);
+                const nextAvailable = nextOriginal
+                    .filter(s => !savedIds.includes(s.id))
+                    .map(item => ({ ...item, dndId: `dnd-${item.id}` }));
+                setAvailableSteps(nextAvailable);
+            } else {
+                const shuffled = [...nextOriginal].sort(() => Math.random() - 0.5);
+                setAvailableSteps(shuffled.map(item => ({ ...item, dndId: `dnd-${item.id}` })));
+                setSelectedSteps([]);
+            }
+            setCurrentPartIndex(nextIndex);
+        }
+    };
+
+    const handlePrevPart = () => {
+        setAllSelectedSteps(prev => ({ ...prev, [currentPartIndex]: selectedSteps }));
+        const prevIndex = currentPartIndex - 1;
+        if (prevIndex >= 0) {
+            const parts = sequenceData[proc.id] || [];
+            const prevOriginal = parts[prevIndex].steps || [];
+            const savedPrevSteps = allSelectedSteps[prevIndex] || [];
+            setSelectedSteps(savedPrevSteps);
+            const savedIds = savedPrevSteps.map(s => s.id);
+            const prevAvailable = prevOriginal
+                .filter(s => !savedIds.includes(s.id))
+                .map(item => ({ ...item, dndId: `dnd-${item.id}` }));
+            setAvailableSteps(prevAvailable);
+            setCurrentPartIndex(prevIndex);
+        }
+    };
+
     const handleSubmitClick = () => {
         if (selectedSteps.length === 0) return;
         setModalInfo({
             type: 'confirm',
             title: 'ยืนยันการจัดลำดับ?',
-            message: 'คุณต้องการส่งคำตอบลำดับขั้นตอน และดูผลลัพธ์หรือไม่?'
+            message: 'คุณต้องการส่งคำตอบลำดับขั้นตอนทั้งหมด และดูผลลัพธ์หรือไม่?'
         });
         setShowModal(true);
     };
 
     const confirmSubmit = () => {
-        const originalData = sequenceData[proc.id] || [];
-        const totalSteps = originalData.length;
+        const finalAllSelected = { ...allSelectedSteps, [currentPartIndex]: selectedSteps };
+        setAllSelectedSteps(finalAllSelected);
 
+        const parts = sequenceData[proc.id] || [];
         let correctCount = 0;
-        // Verify correctness by checking if the id at index matches original id at index
-        selectedSteps.forEach((step, index) => {
-            if (originalData[index] && step.id === originalData[index].id) {
-                correctCount++;
-            }
+        let totalSteps = 0;
+
+        const verifiedSelectedSteps = {};
+        
+        parts.forEach((part, pIndex) => {
+            const originalSteps = part.steps || [];
+            totalSteps += originalSteps.length;
+            const userSteps = finalAllSelected[pIndex] || [];
+
+            const verified = userSteps.map((step, sIndex) => {
+                const isCorrect = originalSteps[sIndex] && step.id === originalSteps[sIndex].id;
+                if (isCorrect) correctCount++;
+                return { ...step, isVerified: true, isCorrect };
+            });
+            verifiedSelectedSteps[pIndex] = verified;
         });
 
-        // Add verification flags for UI display
-        const verifiedSteps = selectedSteps.map((step, index) => ({
-            ...step,
-            isVerified: true,
-            isCorrect: originalData[index] && step.id === originalData[index].id
-        }));
-        setSelectedSteps(verifiedSteps);
+        setSelectedSteps(verifiedSelectedSteps[currentPartIndex] || []);
+        setAllSelectedSteps(verifiedSelectedSteps);
 
         let calculatedScore = totalSteps > 0 ? Math.round((correctCount / totalSteps) * 40) : 0;
 
@@ -196,16 +251,16 @@ export default function MissionSequence() {
             {/* Loading Overlay */}
             {isLoading && (
                 <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white/90 backdrop-blur-md px-4">
-                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 border-rose-100 border-t-[#FB8682] rounded-full animate-spin shadow-sm"></div>
-                    <h2 className="text-2xl font-bold text-rose-900 mb-2 text-center">กำลังเตรียมภารกิจจัดลำดับ...</h2>
+                    <div className="w-16 h-16 md:w-20 md:h-20 mb-6 border-4 rounded-full animate-spin shadow-sm" style={{ borderColor: proc.bgLight, borderTopColor: proc.color }}></div>
+                    <h2 className="text-2xl font-bold mb-2 text-center" style={{ color: proc.color }}>กำลังเตรียมภารกิจจัดลำดับ...</h2>
                     <p className="text-gray-500 mb-6 text-center text-sm md:text-base">รอสักครู่ ระบบกำลังจัดเตรียมข้อมูลขั้นตอนการทำหัตถการ</p>
                     <div className="w-64 h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                         <div
-                            className="h-full bg-gradient-to-r from-[#FB8682] to-[#f4605b] transition-all duration-300"
-                            style={{ width: `${loadingProgress}%` }}
+                            className="h-full transition-all duration-300"
+                            style={{ width: `${loadingProgress}%`, backgroundColor: proc.color }}
                         ></div>
                     </div>
-                    <p className="mt-2 text-sm font-bold text-[#FB8682]">{loadingProgress}%</p>
+                    <p className="mt-2 text-sm font-bold" style={{ color: proc.color }}>{loadingProgress}%</p>
                 </div>
             )}
 
@@ -213,9 +268,9 @@ export default function MissionSequence() {
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="flex justify-center mb-4 text-[#FB8682]">
+                        <div className="flex justify-center mb-4">
                             {modalInfo.type === 'confirm' ? (
-                                <svg className="w-16 h-16 text-[#FB8682]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg className="w-16 h-16" style={{ color: proc.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             ) : modalInfo.type === 'timeout' ? (
                                 <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             ) : (
@@ -235,7 +290,8 @@ export default function MissionSequence() {
                                 </button>
                                 <button
                                     onClick={confirmSubmit}
-                                    className="w-full py-3.5 rounded-xl font-bold text-white bg-[#FB8682] hover:bg-[#f4605b] transition-colors shadow-md"
+                                    className="w-full py-3.5 rounded-xl font-bold text-white transition-all shadow-md hover:brightness-110"
+                                    style={{ backgroundColor: proc.color }}
                                 >
                                     ยืนยัน
                                 </button>
@@ -243,7 +299,8 @@ export default function MissionSequence() {
                         ) : (
                             <button
                                 onClick={handleModalClose}
-                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 bg-[#FB8682] hover:bg-[#f4605b]"
+                                className="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95 hover:brightness-110"
+                                style={{ backgroundColor: proc.color }}
                             >
                                 ไปต่อ
                             </button>
@@ -274,7 +331,7 @@ export default function MissionSequence() {
                 </div>
 
                 {/* Main UI Frame */}
-                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : 'border-rose-50'} flex-1`}>
+                <div className={`bg-white rounded-[32px] shadow-xl w-full p-6 md:p-8 flex flex-col relative overflow-hidden border transition-colors duration-300 ${timeLeft <= 10 && !isSubmitted ? 'border-red-400 shadow-red-200/50' : ''} flex-1`} style={{ borderColor: timeLeft <= 10 && !isSubmitted ? undefined : proc.bgLight }}>
 
                     {timeLeft <= 10 && !isSubmitted && (
                         <div className="absolute inset-0 pointer-events-none z-0 bg-red-500/5 animate-pulse rounded-[32px]"></div>
@@ -283,15 +340,19 @@ export default function MissionSequence() {
                     {/* Header */}
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-rose-900 mb-1">Mission 2 : จัดลำดับขั้นตอน</h2>
-                            <p className="text-gray-600 text-sm font-medium">กดคลิกเพื่อเลือกขั้นตอน หรือลากสลับตำแหน่งให้ถูกต้อง</p>
+                            <h2 className="text-2xl font-bold mb-1" style={{ color: proc.color }}>Mission 2 : จัดลำดับขั้นตอน</h2>
+                            <p className="text-gray-600 text-sm font-medium">
+                                <span className="font-bold" style={{ color: proc.color }}>{sequenceData[proc.id]?.[currentPartIndex]?.partName || `Part ${currentPartIndex + 1}`}</span> - กดคลิกเพื่อเลือกขั้นตอน หรือลากสลับตำแหน่งให้ถูกต้อง
+                            </p>
                         </div>
                         <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold border shadow-sm transition-all z-10 ${timeLeft <= 10 && !isSubmitted
-                            ? 'bg-red-50 text-white border-red-600 bg-red-500 animate-timer-urgent scale-110'
+                            ? 'text-white border-red-600 bg-red-500 animate-timer-urgent scale-110'
                             : timeLeft <= 30 && !isSubmitted
                                 ? 'bg-red-50 text-red-600 border-red-200 animate-pulse'
-                                : 'bg-rose-50 text-rose-900 border-rose-100'
-                            }`}>
+                                : ''
+                            }`}
+                            style={timeLeft > 30 || isSubmitted ? { backgroundColor: proc.bgLight, color: proc.color, borderColor: proc.color } : {}}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -304,9 +365,9 @@ export default function MissionSequence() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-[500px]">
 
                             {/* Left Column: Available Steps */}
-                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-rose-50 flex flex-col h-full">
+                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border flex flex-col h-full" style={{ borderColor: proc.bgLight }}>
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-[#FB8682] font-bold text-lg">ขั้นตอนที่รอจัดเรียง ({availableSteps.length})</h3>
+                                    <h3 className="font-bold text-lg" style={{ color: proc.color }}>ขั้นตอนที่รอจัดเรียง ({availableSteps.length})</h3>
                                 </div>
                                 <div className="flex-1 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar flex flex-col gap-3">
                                     {availableSteps.length === 0 ? (
@@ -319,9 +380,26 @@ export default function MissionSequence() {
                                             <div
                                                 key={step.dndId}
                                                 onClick={() => handleAddStep(step)}
-                                                className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-[#FB8682] hover:shadow-md transition-all group flex items-start gap-3"
+                                                className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:shadow-md transition-all flex items-start gap-3"
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.borderColor = proc.color;
+                                                    const icon = e.currentTarget.querySelector('.add-icon');
+                                                    if (icon) {
+                                                        icon.style.backgroundColor = proc.color;
+                                                        icon.style.color = '#ffffff';
+                                                    }
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                                    const icon = e.currentTarget.querySelector('.add-icon');
+                                                    if (icon) {
+                                                        icon.style.backgroundColor = proc.bgLight;
+                                                        icon.style.color = proc.color;
+                                                    }
+                                                }}
                                             >
-                                                <div className="bg-rose-50 text-[#FB8682] w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 group-hover:bg-[#FB8682] group-hover:text-white transition-colors">
+                                                <div className="add-icon w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 transition-colors"
+                                                     style={{ backgroundColor: proc.bgLight, color: proc.color }}>
                                                     +
                                                 </div>
                                                 <p className="text-gray-700 text-sm leading-relaxed">{step.text}</p>
@@ -332,9 +410,9 @@ export default function MissionSequence() {
                             </div>
 
                             {/* Right Column: Ordered Steps */}
-                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border border-rose-50 flex flex-col h-full">
+                            <div className="bg-[#f8fafc] rounded-2xl p-4 md:p-5 border flex flex-col h-full" style={{ borderColor: proc.bgLight }}>
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-[#FB8682] font-bold text-lg">ลำดับขั้นตอน ({selectedSteps.length})</h3>
+                                    <h3 className="font-bold text-lg" style={{ color: proc.color }}>ลำดับขั้นตอน ({selectedSteps.length})</h3>
                                     {!isSubmitted && selectedSteps.length > 0 && (
                                         <button
                                             onClick={() => {
@@ -353,8 +431,11 @@ export default function MissionSequence() {
                                         <div
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
-                                            className={`flex-1 border-2 border-dashed rounded-xl p-3 flex flex-col gap-2 overflow-y-auto max-h-[500px] custom-scrollbar transition-colors ${snapshot.isDraggingOver ? 'bg-rose-50 border-[#FB8682]' : 'bg-white border-rose-200'
-                                                }`}
+                                            className={`flex-1 border-2 border-dashed rounded-xl p-3 flex flex-col gap-2 overflow-y-auto max-h-[500px] custom-scrollbar transition-colors ${snapshot.isDraggingOver ? '' : 'bg-white'}`}
+                                            style={{
+                                                borderColor: snapshot.isDraggingOver ? proc.color : '#e2e8f0',
+                                                backgroundColor: snapshot.isDraggingOver ? proc.bgLight : 'white'
+                                            }}
                                         >
                                             {selectedSteps.length === 0 && !snapshot.isDraggingOver ? (
                                                 <div className="h-full flex flex-col items-center justify-center text-gray-400 py-10 pointer-events-none">
@@ -376,18 +457,21 @@ export default function MissionSequence() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                             onClick={() => handleRemoveStep(step)}
-                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-center gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg border-[#FB8682] rotate-1 z-50' : 'shadow-sm border-gray-200 hover:border-red-300'
+                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-center gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg rotate-1 z-50' : 'shadow-sm border-gray-200 hover:shadow-md'
                                                                 } ${isSubmitted ? 'cursor-default pointer-events-none' : 'cursor-grab active:cursor-grabbing'}`}
                                                             style={{
                                                                 ...provided.draggableProps.style,
-                                                                userSelect: 'none'
+                                                                userSelect: 'none',
+                                                                borderColor: snapshot.isDragging ? proc.color : undefined
                                                             }}
                                                         >
                                                             {/* Step Number Badge */}
                                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-sm ${isSubmitted
                                                                 ? (step.isCorrect ? 'bg-green-100 text-green-600 border border-green-200' : 'bg-red-100 text-red-600 border border-red-200')
-                                                                : 'bg-rose-100 text-rose-700'
-                                                                }`}>
+                                                                : ''
+                                                                }`}
+                                                                style={!isSubmitted ? { backgroundColor: proc.bgLight, color: proc.color } : {}}
+                                                            >
                                                                 {index + 1}
                                                             </div>
 
@@ -416,18 +500,44 @@ export default function MissionSequence() {
                                     )}
                                 </Droppable>
 
-                                <div className="mt-4 flex flex-col items-center gap-2">
+                                <div className="mt-4 flex flex-col items-center gap-2 w-full">
                                     {!isSubmitted ? (
-                                        <button
-                                            onClick={handleSubmitClick}
-                                            disabled={selectedSteps.length === 0 || timeLeft <= 0}
-                                            className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
-                                                ? 'bg-gradient-to-r from-[#FB8682] to-[#f4605b] text-white hover:shadow-lg hover:-translate-y-0.5'
-                                                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                                }`}
-                                        >
-                                            ส่งคำตอบ
-                                        </button>
+                                        <div className="flex w-full gap-2 mt-3">
+                                            {currentPartIndex > 0 && (
+                                                <button
+                                                    onClick={handlePrevPart}
+                                                    className="w-1/3 py-3.5 rounded-xl font-bold shadow-md transform transition-all bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                >
+                                                    ย้อนกลับ
+                                                </button>
+                                            )}
+                                            
+                                            {currentPartIndex < (sequenceData[proc.id]?.length || 1) - 1 ? (
+                                                <button
+                                                    onClick={handleNextPart}
+                                                    disabled={selectedSteps.length === 0 || timeLeft <= 0}
+                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
+                                                        ? 'text-white hover:shadow-lg hover:-translate-y-0.5 hover:brightness-110'
+                                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                        }`}
+                                                    style={selectedSteps.length > 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
+                                                >
+                                                    ส่วนต่อไป
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={handleSubmitClick}
+                                                    disabled={selectedSteps.length === 0 || timeLeft <= 0}
+                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
+                                                        ? 'text-white hover:shadow-lg hover:-translate-y-0.5 hover:brightness-110'
+                                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                        }`}
+                                                    style={selectedSteps.length > 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
+                                                >
+                                                    ส่งคำตอบ
+                                                </button>
+                                            )}
+                                        </div>
                                     ) : (
                                         <button
                                             onClick={handleModalClose}

@@ -78,8 +78,8 @@ export default function SimulationScore() {
             {isSubmitting && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75 backdrop-blur-sm transition-opacity">
                     <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm w-full text-center mx-4 animate-pulse">
-                        <div className="w-16 h-16 border-4 border-gray-100 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">กำลังบันทึกข้อมูล...</h2>
+                        <div className="w-16 h-16 border-4 rounded-full animate-spin mb-6" style={{ borderColor: proc.bgLight, borderTopColor: proc.color }}></div>
+                        <h2 className="text-2xl font-bold mb-2" style={{ color: proc.color }}>กำลังบันทึกข้อมูล...</h2>
                         <p className="text-gray-500">กรุณารอสักครู่ ระบบกำลังส่งข้อมูลไปยังระบบส่วนกลาง</p>
                     </div>
                 </div>
