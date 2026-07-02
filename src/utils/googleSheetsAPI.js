@@ -29,7 +29,7 @@ export const sendDataToGoogleSheet = async (scriptUrl, payload) => {
 };
 
 // TODO: นำ URL ของ Web App จาก Google Apps Script มาใส่ที่นี่
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyChasaFegUEpR1ayFiZ7_hyRkDSCLiKR6komYabdQ4R00HxMySf_N4UPLuhW2aShDQDw/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKbuy86FiUSlvf3LR6Hfh9us9vaJ0y7YvNHbTCjV1PbnK53nJZ4JrRJeq8sYgiSIe1_Q/exec";
 
 /**
  * ฟังก์ชันส่งผลการเล่นเกมไปยัง Google Sheets
@@ -53,7 +53,7 @@ export const submitGameResult = async (payload) => {
     });
     console.log("Payload JSON ฉบับเต็ม:", payload);
 
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbyChasaFegUEpR1ayFiZ7_hyRkDSCLiKR6komYabdQ4R00HxMySf_N4UPLuhW2aShDQDw/exec") {
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwKbuy86FiUSlvf3LR6Hfh9us9vaJ0y7YvNHbTCjV1PbnK53nJZ4JrRJeq8sYgiSIe1_Q/exec") {
         console.warn("⚠️ [Mock] ส่งข้อมูลสำเร็จจำลอง (กรุณาใส่ GOOGLE_SCRIPT_URL ใน googleSheetsAPI.js):", payload);
         return Promise.resolve({ status: "success", mock: true });
     }
