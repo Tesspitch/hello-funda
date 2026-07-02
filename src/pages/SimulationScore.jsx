@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
 import bg from '../assets/img/background1.png';
@@ -33,10 +33,12 @@ export default function SimulationScore() {
     const totalTimeSpent = equipmentTimeSpent + sequenceTimeSpent;
 
     const hasSubmittedRef = useRef(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (procedureData.status !== "completed" && !hasSubmittedRef.current) {
             hasSubmittedRef.current = true;
+            setIsSubmitting(true);
             updateProcedureResult(proc.id, diffId, totalScore, totalTimeSpent);
 
             // ส่งข้อมูลไปยัง Google Apps Script
@@ -58,8 +60,14 @@ export default function SimulationScore() {
 
             // โค้ดส่งข้อมูลจะไปอยู่ในไฟล์ googleSheetsAPI.js แทน
             submitGameResult(payload)
-                .then(res => console.log("Data sent to Google Sheets successfully:", res))
-                .catch(err => console.error("Failed to send data to Google Sheets:", err));
+                .then(res => {
+                    console.log("Data sent to Google Sheets successfully:", res);
+                    setIsSubmitting(false);
+                })
+                .catch(err => {
+                    console.error("Failed to send data to Google Sheets:", err);
+                    setIsSubmitting(false);
+                });
         }
     }, [proc.id, diffId, totalScore, totalTimeSpent, procedureData.status, updateProcedureResult, playerId, proc.name, preScore, eqScore, seqScore, postScore, equipmentTimeSpent, sequenceTimeSpent]);
 
@@ -67,6 +75,16 @@ export default function SimulationScore() {
 
     return (
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 py-10" style={{ backgroundImage: `url(${bg})` }}>
+            {isSubmitting && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75 backdrop-blur-sm transition-opacity">
+                    <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm w-full text-center mx-4 animate-pulse">
+                        <div className="w-16 h-16 border-4 border-gray-100 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">กำลังบันทึกข้อมูล...</h2>
+                        <p className="text-gray-500">กรุณารอสักครู่ ระบบกำลังส่งข้อมูลไปยังระบบส่วนกลาง</p>
+                    </div>
+                </div>
+            )}
+            
             <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
 
                 {/* Header */}
