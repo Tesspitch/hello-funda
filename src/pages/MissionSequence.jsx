@@ -358,7 +358,7 @@ export default function MissionSequence() {
                                             {selectedSteps.length === 0 && !snapshot.isDraggingOver ? (
                                                 <div className="h-full flex flex-col items-center justify-center text-gray-400 py-10 pointer-events-none">
                                                     <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                                                    <span className="font-medium text-sm">คลิกที่ขั้นตอนด้านซ้ายเพื่อนำมาจัดเรียง</span>
+                                                    <span className="font-medium text-sm">คลิกที่ขั้นตอนเพื่อนำมาจัดเรียง</span>
                                                 </div>
                                             ) : null}
 
