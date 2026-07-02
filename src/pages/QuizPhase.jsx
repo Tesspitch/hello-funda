@@ -19,6 +19,9 @@ export default function QuizPhase() {
     // เก็บคำตอบของแต่ละข้อไว้ใน Array เพื่อให้สามารถย้อนกลับมาแก้ได้
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
 
+    // สถานะว่าเริ่มทำแบบทดสอบหรือยัง
+    const [hasStarted, setHasStarted] = useState(false);
+
     const isPreTest = type === 'pre';
     
     // Loading State for Post-test
@@ -60,6 +63,46 @@ export default function QuizPhase() {
                         ></div>
                     </div>
                     <p className="mt-2 text-sm font-bold" style={{ color: proc.color }}>{loadingProgress}%</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!hasStarted) {
+        return (
+            <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 py-8" style={{ backgroundImage: `url(${bg})` }}>
+                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col items-center justify-center font-sans border border-gray-100 text-center p-8 md:p-10 animate-jiggle">
+                    <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center mb-6 shadow-inner">
+                        <span className="text-4xl">{isPreTest ? '📝' : '🎓'}</span>
+                    </div>
+                    
+                    <h1 className="text-2xl md:text-3xl font-bold mb-3 leading-tight" style={{ color: proc.color }}>
+                        เตรียมพร้อมสำหรับ
+                        <br />
+                        {isPreTest ? "แบบทดสอบก่อนเรียน" : "แบบทดสอบหลังเรียน"}
+                    </h1>
+                    
+                    <div className="bg-gray-50 rounded-xl p-4 w-full mb-8 border border-gray-100">
+                        <p className="text-gray-700 font-medium mb-1">
+                            หัตถการ: <span style={{ color: proc.color }}>{proc.name}</span>
+                        </p>
+                        <p className="text-gray-500 text-sm mb-3">
+                            ({proc.nameTh})
+                        </p>
+                        <div className="h-px w-full bg-gray-200 mb-3"></div>
+                        <p className="text-gray-800 font-bold">
+                            จำนวน {questions.length} ข้อ
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => setHasStarted(true)}
+                        className="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                        style={{ backgroundColor: proc.color }}
+                    >
+                        <span>เริ่มทำแบบทดสอบเลย</span>
+                        <span className="text-2xl leading-none">›</span>
+                    </button>
                 </div>
             </div>
         );
