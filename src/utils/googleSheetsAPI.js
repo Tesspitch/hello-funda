@@ -53,7 +53,7 @@ export const submitGameResult = async (payload) => {
     });
     console.log("Payload JSON ฉบับเต็ม:", payload);
 
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwKbuy86FiUSlvf3LR6Hfh9us9vaJ0y7YvNHbTCjV1PbnK53nJZ4JrRJeq8sYgiSIe1_Q/exec") {
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "GOOGLE SCRIPT URL") {
         console.warn("⚠️ [Mock] ส่งข้อมูลสำเร็จจำลอง (กรุณาใส่ GOOGLE_SCRIPT_URL ใน googleSheetsAPI.js):", payload);
         return Promise.resolve({ status: "success", mock: true });
     }
