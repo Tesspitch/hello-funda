@@ -84,7 +84,7 @@ export const equipmentData = {
         { id: 8, name: "Acepto Syring", img: acepto_syring, isCorrect: false },
         { id: 9, name: "Flow Meter", img: flow_meter, isCorrect: true },
         { id: 10, name: "ทิชชู่", img: tissue, isCorrect: false },
-        { id: 11, name: "ชฎา", img: chada, isCorrect: true },
+        { id: 11, name: "Nipple", img: chada, isCorrect: true },
         { id: 12, name: "Sterile water 10 cc", img: sterile_water, isCorrect: true },
         { id: 13, name: "เจลแอลกอฮอล์ล้างมือ", img: handgel, isCorrect: true },
         { id: 14, name: "สาย NG", img: ng_line, isCorrect: false },
