@@ -1,5 +1,42 @@
 
 
+import ngIcon from '../assets/icons/ng.svg';
+import suctionIcon from '../assets/icons/suction.svg';
+import foleyIcon from '../assets/icons/foley.svg';
+
+export const proceduresMetaData = [
+    {
+        id: "suction",
+        num: 1,
+        icon: suctionIcon,
+        name: "Suction",
+        nameTh: "การดูดเสมหะ",
+        desc: "ฝึกการดูแลทางเดินหายใจโดยการดูดเสมหะอย่างถูกต้องและปลอดภัย",
+        color: "#4A90E2",
+        bgLight: "#eff6ff"
+    },
+    {
+        id: "ng_tube",
+        num: 2,
+        icon: ngIcon,
+        name: "NG Tube",
+        nameTh: "การใส่สายยางให้อาหารทางจมูก",
+        desc: "ฝึกการใส่สายยางให้อาหารทางจมูกอย่างถูกต้องและปลอดภัย",
+        color: "#48BB78",
+        bgLight: "#f0fdf4"
+    },
+    {
+        id: "foley_catheter",
+        num: 3,
+        icon: foleyIcon,
+        name: "Foley Catheter",
+        nameTh: "การสวนปัสสาวะ",
+        desc: "ฝึกการสวนปัสสาวะโดยใช้สายสวนปัสสาวะอย่างถูกต้องและปลอดภัย",
+        color: "#F56565",
+        bgLight: "#fef2f2"
+    },
+];
+
 ////////////////////
 ////  SUCTION  ////
 //////////////////

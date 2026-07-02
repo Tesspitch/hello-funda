@@ -233,8 +233,12 @@ export default function MissionEquipment() {
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="text-6xl mb-4">
-                            {modalInfo.type === 'confirm' ? '❓' : '⏰'}
+                        <div className="flex justify-center mb-4 text-blue-500">
+                            {modalInfo.type === 'confirm' ? (
+                                <svg className="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            ) : (
+                                <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            )}
                         </div>
                         <h3 className="text-2xl font-bold mb-2 text-gray-800">{modalInfo.title}</h3>
                         <p className="text-gray-600 mb-6">{modalInfo.message}</p>
@@ -364,7 +368,7 @@ export default function MissionEquipment() {
                                         }}
                                         className="text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 hover:bg-red-100 transition-colors"
                                     >
-                                        เคลียร์ทั้งหมด 🗑️
+                                        <span className="flex items-center gap-1">เคลียร์ทั้งหมด <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></span>
                                     </button>
                                 )}
                             </div>
@@ -373,7 +377,7 @@ export default function MissionEquipment() {
                                 <div className="w-full h-full bg-gray-50 rounded-xl border border-gray-200 p-4 shadow-inner relative flex flex-wrap content-start gap-3 overflow-y-auto">
                                     {selectedItems.length === 0 ? (
                                         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
-                                            <span className="text-3xl mb-2">📥</span>
+                                            <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                             <span className="font-medium text-sm">คลิกที่อุปกรณ์เพื่อนำมาจัดเตรียม</span>
                                         </div>
                                     ) : (
@@ -388,8 +392,12 @@ export default function MissionEquipment() {
                                                 </span>
                                                 {/* Verification Badge */}
                                                 {(item.isVerified || isSubmitted) && (
-                                                    <div className="absolute -top-2 -right-2 text-xl filter drop-shadow-sm animate-pop-in">
-                                                        {item.isCorrect !== false ? "✅" : "❌"}
+                                                    <div className="absolute -top-1 -right-1 filter drop-shadow-sm animate-pop-in flex items-center justify-center">
+                                                        {item.isCorrect !== false ? (
+                                                            <svg className="w-5 h-5 text-green-500 bg-white rounded-full" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                                                        ) : (
+                                                            <svg className="w-5 h-5 text-red-500 bg-white rounded-full" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path></svg>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
@@ -418,7 +426,7 @@ export default function MissionEquipment() {
                                         className="mt-3 w-full bg-gray-100 border border-gray-200 text-gray-500 py-3.5 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2"
                                         disabled
                                     >
-                                        <span>✓</span> ผ่านภารกิจแล้ว
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> ผ่านภารกิจแล้ว
                                     </button>
                                 )}
                             </div>

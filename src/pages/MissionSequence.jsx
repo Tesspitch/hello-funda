@@ -212,8 +212,14 @@ export default function MissionSequence() {
             {showModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="text-6xl mb-4">
-                            {modalInfo.type === 'confirm' ? '❓' : modalInfo.type === 'timeout' ? '⏰' : '✅'}
+                        <div className="flex justify-center mb-4 text-blue-500">
+                            {modalInfo.type === 'confirm' ? (
+                                <svg className="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            ) : modalInfo.type === 'timeout' ? (
+                                <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            ) : (
+                                <svg className="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            )}
                         </div>
                         <h3 className="text-2xl font-bold mb-2 text-gray-800">{modalInfo.title}</h3>
                         <p className="text-gray-600 mb-6">{modalInfo.message}</p>
@@ -304,7 +310,7 @@ export default function MissionSequence() {
                                 <div className="flex-1 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar flex flex-col gap-3">
                                     {availableSteps.length === 0 ? (
                                         <div className="h-full flex flex-col items-center justify-center text-gray-400 py-10">
-                                            <span className="text-3xl mb-2">🎉</span>
+                                            <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             <span className="font-medium text-sm">เลือกขั้นตอนครบแล้ว</span>
                                         </div>
                                     ) : (
@@ -336,7 +342,7 @@ export default function MissionSequence() {
                                             }}
                                             className="text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 hover:bg-red-100 transition-colors"
                                         >
-                                            เคลียร์ทั้งหมด 🗑️
+                                            <span className="flex items-center gap-1">เคลียร์ทั้งหมด <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></span>
                                         </button>
                                     )}
                                 </div>
@@ -351,7 +357,7 @@ export default function MissionSequence() {
                                         >
                                             {selectedSteps.length === 0 && !snapshot.isDraggingOver ? (
                                                 <div className="h-full flex flex-col items-center justify-center text-gray-400 py-10 pointer-events-none">
-                                                    <span className="text-3xl mb-2">📥</span>
+                                                    <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                                     <span className="font-medium text-sm">คลิกที่ขั้นตอนด้านซ้ายเพื่อนำมาจัดเรียง</span>
                                                 </div>
                                             ) : null}
@@ -378,8 +384,8 @@ export default function MissionSequence() {
                                                         >
                                                             {/* Step Number Badge */}
                                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-sm ${isSubmitted
-                                                                    ? (step.isCorrect ? 'bg-green-100 text-green-600 border border-green-200' : 'bg-red-100 text-red-600 border border-red-200')
-                                                                    : 'bg-blue-100 text-blue-700'
+                                                                ? (step.isCorrect ? 'bg-green-100 text-green-600 border border-green-200' : 'bg-red-100 text-red-600 border border-red-200')
+                                                                : 'bg-blue-100 text-blue-700'
                                                                 }`}>
                                                                 {index + 1}
                                                             </div>
@@ -388,12 +394,16 @@ export default function MissionSequence() {
 
                                                             {/* Status/Action Icon */}
                                                             {!isSubmitted ? (
-                                                                <div className="text-gray-300 hover:text-red-500 transition-colors px-1 cursor-pointer">
-                                                                    ✕
+                                                                <div className="text-gray-300 hover:text-red-500 transition-colors px-1 cursor-pointer" onClick={(e) => { e.stopPropagation(); handleRemoveStep(step); }}>
+                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                                 </div>
                                                             ) : (
-                                                                <div className="text-xl">
-                                                                    {step.isCorrect ? '✅' : '❌'}
+                                                                <div className="flex items-center justify-center">
+                                                                    {step.isCorrect ? (
+                                                                        <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                                                                    ) : (
+                                                                        <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path></svg>
+                                                                    )}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -411,8 +421,8 @@ export default function MissionSequence() {
                                             onClick={handleSubmitClick}
                                             disabled={selectedSteps.length === 0 || timeLeft <= 0}
                                             className={`mt-3 w-full py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
-                                                    ? 'bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] text-white hover:shadow-lg hover:-translate-y-0.5'
-                                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                ? 'bg-gradient-to-r from-[#4A90E2] to-[#3b82f6] text-white hover:shadow-lg hover:-translate-y-0.5'
+                                                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                                 }`}
                                         >
                                             ส่งคำตอบ
@@ -422,7 +432,7 @@ export default function MissionSequence() {
                                             onClick={handleModalClose}
                                             className="mt-3 w-full bg-green-500 hover:bg-green-600 text-white py-3.5 rounded-xl font-bold shadow-md transform transition-all flex items-center justify-center gap-2"
                                         >
-                                            <span>✓</span> ไปยังหน้าต่อไป
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> ไปยังหน้าต่อไป
                                         </button>
                                     )}
                                 </div>
