@@ -99,7 +99,7 @@ export default function MissionSequence() {
     const handleTimeUp = () => {
         setIsSubmitted(true);
         if (updateMissionSequenceResult) {
-            updateMissionSequenceResult(proc.id, diffId, 0);
+            updateMissionSequenceResult(proc.id, diffId, 0, initialTime);
         }
         setScore(0);
         setModalInfo({
@@ -171,7 +171,8 @@ export default function MissionSequence() {
         setIsSubmitted(true);
 
         if (updateMissionSequenceResult) {
-            updateMissionSequenceResult(proc.id, diffId, calculatedScore);
+            const timeSpent = initialTime - timeLeft;
+            updateMissionSequenceResult(proc.id, diffId, calculatedScore, timeSpent);
         }
 
         setShowModal(false);

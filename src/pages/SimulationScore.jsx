@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
 import bg from '../assets/img/background1.png';
+import { submitGameResult } from "../utils/googleSheetsAPI";
 
 export default function SimulationScore() {
     const location = useLocation();
@@ -11,6 +12,7 @@ export default function SimulationScore() {
 
     const procedures = useGameStore(state => state.procedures);
     const updateProcedureResult = useGameStore(state => state.updateProcedureResult);
+    const playerId = useGameStore(state => state.player.id);
 
     // ถ้าไม่มีข้อมูล ให้เด้งกลับไปหน้าแรก
     if (!proc || !diffId) {
@@ -25,14 +27,41 @@ export default function SimulationScore() {
     const postScore = procedureData.postTestScore || 0;
     const totalScore = preScore + eqScore + seqScore + postScore;
 
-    // เวลาที่ใช้ไป
-    const timeSpent = procedureData.equipmentTimeSpent || 0;
+    // เวลาที่ใช้ไปในแต่ละด่าน
+    const equipmentTimeSpent = procedureData.equipmentTimeSpent || 0;
+    const sequenceTimeSpent = procedureData.sequenceTimeSpent || 0;
+    const totalTimeSpent = equipmentTimeSpent + sequenceTimeSpent;
+
+    const hasSubmittedRef = useRef(false);
 
     useEffect(() => {
-        if (procedureData.status !== "completed") {
-            updateProcedureResult(proc.id, diffId, totalScore, timeSpent);
+        if (procedureData.status !== "completed" && !hasSubmittedRef.current) {
+            hasSubmittedRef.current = true;
+            updateProcedureResult(proc.id, diffId, totalScore, totalTimeSpent);
+
+            // ส่งข้อมูลไปยัง Google Apps Script
+            const payload = {
+                studentId: playerId || "Unknown",
+                procedureId: proc.id,
+                procedureName: proc.name,
+                difficulty: diffId,
+                preTestScore: preScore,
+                equipmentScore: eqScore,
+                sequenceScore: seqScore,
+                postTestScore: postScore,
+                totalScore: totalScore,
+                equipmentTimeSpent: equipmentTimeSpent,
+                sequenceTimeSpent: sequenceTimeSpent,
+                totalTimeSpent: totalTimeSpent,
+                isPass: totalScore >= 60
+            };
+
+            // โค้ดส่งข้อมูลจะไปอยู่ในไฟล์ googleSheetsAPI.js แทน
+            submitGameResult(payload)
+                .then(res => console.log("Data sent to Google Sheets successfully:", res))
+                .catch(err => console.error("Failed to send data to Google Sheets:", err));
         }
-    }, [proc.id, diffId, totalScore, timeSpent, procedureData.status, updateProcedureResult]);
+    }, [proc.id, diffId, totalScore, totalTimeSpent, procedureData.status, updateProcedureResult, playerId, proc.name, preScore, eqScore, seqScore, postScore, equipmentTimeSpent, sequenceTimeSpent]);
 
     const isPass = totalScore >= 60;
 

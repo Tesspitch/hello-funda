@@ -8,6 +8,7 @@ const defaultDifficultyState = {
     equipmentScore: 0,
     equipmentTimeSpent: 0,
     sequenceScore: 0,
+    sequenceTimeSpent: 0,
     postTestScore: 0,
     score: 0,
     timeSpentSeconds: 0,
@@ -89,9 +90,9 @@ export const useGameStore = create((set) => ({
         }),
 
     // ฟังก์ชันสำหรับบันทึกคะแนน Mission Sequence
-    updateMissionSequenceResult: (procedureId, diffId, newScore) =>
+    updateMissionSequenceResult: (procedureId, diffId, newScore, timeSpent) =>
         set((state) => {
-            console.log(`[Store] Mission Sequence Score for ${procedureId} (${diffId}): ${newScore}/40`);
+            console.log(`[Store] Mission Sequence Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`);
             return {
                 procedures: {
                     ...state.procedures,
@@ -100,6 +101,7 @@ export const useGameStore = create((set) => ({
                         [diffId]: {
                             ...state.procedures[procedureId][diffId],
                             sequenceScore: newScore,
+                            sequenceTimeSpent: timeSpent,
                         }
                     }
                 }
