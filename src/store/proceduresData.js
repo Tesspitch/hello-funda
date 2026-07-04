@@ -111,11 +111,32 @@ export const timeConfig = {
 // ข้อมูลอุปกรณ์สำหรับแต่ละหัตถการ
 export const equipmentData = {
     suction: [
-        { id: 1, name: "ผ้ารองกันเปื้อน", img: mattress_protector, isCorrect: false },
-        { id: 2, name: "ถุงมือ Sterile", img: sterile_glove, isCorrect: true },
-        { id: 3, name: "ถุงมือสะอาด", img: clean_glove, isCorrect: true },
-        { id: 4, name: "0.9% NSS", img: nss, isCorrect: true },
-        { id: 5, name: "ไม้พันสำลี 5 ก้าน", img: cotton_bud, isCorrect: true },
+        {
+            id: 1,
+            name: "ผ้ารองกันเปื้อน",
+            img: mattress_protector, isCorrect: false
+        },
+        {
+            id: 2,
+            name: "ถุงมือ Sterile",
+            img: sterile_glove,
+            isCorrect: true
+        },
+        {
+            id: 3,
+            name: "ถุงมือสะอาด",
+            img: clean_glove,
+            isCorrect: true
+        },
+        {
+            id: 4,
+            name: "0.9% NSS",
+            img: nss,
+            isCorrect: true
+        },
+        {
+            id: 5, name: "ไม้พันสำลี 5 ก้าน", img: cotton_bud, isCorrect: true
+        },
         { id: 6, name: "Ambu Bag", img: ambu_bag, isCorrect: true },
         { id: 7, name: "Syring 5 cc", img: syring5cc, isCorrect: true },
         { id: 8, name: "Acepto Syring", img: acepto_syring, isCorrect: false },
