@@ -48,6 +48,9 @@ export default function QuizPhase() {
     // สถานะว่าเริ่มทำแบบทดสอบหรือยัง
     const [hasStarted, setHasStarted] = useState(false);
     
+    // สถานะยืนยันการส่งคำตอบ
+    const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+    
     // Loading State for Post-test
     const [isLoading, setIsLoading] = useState(!isPreTest);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -153,23 +156,27 @@ export default function QuizPhase() {
 
     const handleNext = () => {
         if (isLastQuestion) {
-            // จบแบบทดสอบ คำนวณคะแนนทั้งหมดรวดเดียว
-            let calculatedScore = 0;
-            answers.forEach((ans, idx) => {
-                if (ans === questions[idx].correctAnswer) {
-                    calculatedScore += 2; // 5 ข้อ ข้อละ 2 คะแนน รวม 10
-                }
-            });
-
-            if (isPreTest) {
-                updatePreTestResult(proc.id, diffId, calculatedScore);
-                navigate("/mission-equipment", { state: { proc, diffId }, replace: true });
-            } else {
-                updatePostTestResult(proc.id, diffId, calculatedScore);
-                navigate("/simulation-score", { state: { proc, diffId }, replace: true });
-            }
+            setShowSubmitConfirm(true);
         } else {
             setCurrentIndex(prev => prev + 1);
+        }
+    };
+
+    const handleConfirmSubmit = () => {
+        // จบแบบทดสอบ คำนวณคะแนนทั้งหมดรวดเดียว
+        let calculatedScore = 0;
+        answers.forEach((ans, idx) => {
+            if (ans === questions[idx].correctAnswer) {
+                calculatedScore += 2; // 5 ข้อ ข้อละ 2 คะแนน รวม 10
+            }
+        });
+
+        if (isPreTest) {
+            updatePreTestResult(proc.id, diffId, calculatedScore);
+            navigate("/mission-equipment", { state: { proc, diffId }, replace: true });
+        } else {
+            updatePostTestResult(proc.id, diffId, calculatedScore);
+            navigate("/simulation-score", { state: { proc, diffId }, replace: true });
         }
     };
 
@@ -290,6 +297,35 @@ export default function QuizPhase() {
                     </div>
                 </div>
             </div>
+
+            {/* Submit Confirmation Modal */}
+            {showSubmitConfirm && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+                    <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
+                        <div className="flex justify-center mb-4">
+                            <svg className="w-16 h-16" style={{ color: proc.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-2 text-gray-800">ยืนยันการส่งคำตอบ?</h3>
+                        <p className="text-gray-600 mb-6">คุณต้องการยืนยันการส่งคำตอบ และไปยังขั้นตอนต่อไปหรือไม่?</p>
+                        
+                        <div className="flex w-full gap-3">
+                            <button 
+                                onClick={() => setShowSubmitConfirm(false)}
+                                className="w-full py-3.5 rounded-xl font-bold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors"
+                            >
+                                ยกเลิก
+                            </button>
+                            <button 
+                                onClick={handleConfirmSubmit}
+                                className="w-full py-3.5 rounded-xl font-bold text-white transition-all shadow-md hover:brightness-110"
+                                style={{ backgroundColor: proc.color }}
+                            >
+                                ยืนยัน
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

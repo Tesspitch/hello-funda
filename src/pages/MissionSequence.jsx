@@ -185,7 +185,7 @@ export default function MissionSequence() {
     };
 
     const handleSubmitClick = () => {
-        if (selectedSteps.length === 0) return;
+        if (availableSteps.length > 0) return;
         setModalInfo({
             type: 'confirm',
             title: 'ยืนยันการจัดลำดับ?',
@@ -515,24 +515,24 @@ export default function MissionSequence() {
                                             {currentPartIndex < (sequenceData[proc.id]?.length || 1) - 1 ? (
                                                 <button
                                                     onClick={handleNextPart}
-                                                    disabled={selectedSteps.length === 0 || timeLeft <= 0}
-                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
+                                                    disabled={availableSteps.length > 0 || timeLeft <= 0}
+                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${availableSteps.length === 0 && timeLeft > 0
                                                         ? 'text-white hover:shadow-lg hover:-translate-y-0.5 hover:brightness-110'
                                                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                                         }`}
-                                                    style={selectedSteps.length > 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
+                                                    style={availableSteps.length === 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
                                                 >
                                                     ส่วนต่อไป
                                                 </button>
                                             ) : (
                                                 <button
                                                     onClick={handleSubmitClick}
-                                                    disabled={selectedSteps.length === 0 || timeLeft <= 0}
-                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${selectedSteps.length > 0 && timeLeft > 0
+                                                    disabled={availableSteps.length > 0 || timeLeft <= 0}
+                                                    className={`flex-1 py-3.5 rounded-xl font-bold shadow-md transform transition-all ${availableSteps.length === 0 && timeLeft > 0
                                                         ? 'text-white hover:shadow-lg hover:-translate-y-0.5 hover:brightness-110'
                                                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                                         }`}
-                                                    style={selectedSteps.length > 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
+                                                    style={availableSteps.length === 0 && timeLeft > 0 ? { backgroundColor: proc.color } : {}}
                                                 >
                                                     ส่งคำตอบ
                                                 </button>
