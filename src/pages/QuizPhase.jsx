@@ -13,7 +13,33 @@ export default function QuizPhase() {
     const updatePreTestResult = useGameStore(state => state.updatePreTestResult);
     const updatePostTestResult = useGameStore(state => state.updatePostTestResult);
 
-    const questions = proc ? (quizData[proc.id] || []) : [];
+    const isPreTest = type === 'pre';
+    const allQuestions = proc ? (quizData[proc.id] || []) : [];
+    
+    const [questions] = useState(() => {
+        if (!proc) return [];
+        let selectedQuestions = isPreTest ? allQuestions.slice(0, 5) : allQuestions.slice(5, 10);
+        
+        const shuffleArray = (array) => {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        };
+
+        return shuffleArray(selectedQuestions).map(q => {
+            const optionsWithOriginalIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+            const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
+            const newCorrectIndex = shuffledOptions.findIndex(o => o.originalIndex === q.correctAnswer);
+            return {
+                ...q,
+                options: shuffledOptions.map(o => o.text),
+                correctAnswer: newCorrectIndex
+            };
+        });
+    });
 
     const [currentIndex, setCurrentIndex] = useState(0);
     // เก็บคำตอบของแต่ละข้อไว้ใน Array เพื่อให้สามารถย้อนกลับมาแก้ได้
@@ -21,8 +47,6 @@ export default function QuizPhase() {
 
     // สถานะว่าเริ่มทำแบบทดสอบหรือยัง
     const [hasStarted, setHasStarted] = useState(false);
-
-    const isPreTest = type === 'pre';
     
     // Loading State for Post-test
     const [isLoading, setIsLoading] = useState(!isPreTest);
@@ -139,10 +163,10 @@ export default function QuizPhase() {
 
             if (isPreTest) {
                 updatePreTestResult(proc.id, diffId, calculatedScore);
-                navigate("/mission-equipment", { state: { proc, diffId } });
+                navigate("/mission-equipment", { state: { proc, diffId }, replace: true });
             } else {
                 updatePostTestResult(proc.id, diffId, calculatedScore);
-                navigate("/simulation-score", { state: { proc, diffId } });
+                navigate("/simulation-score", { state: { proc, diffId }, replace: true });
             }
         } else {
             setCurrentIndex(prev => prev + 1);

@@ -9,6 +9,7 @@ import MissionSequence from './pages/MissionSequence';
 import QuizPhase from './pages/QuizPhase';
 import QuizScore from './pages/QuizScore';
 import SimulationScore from './pages/SimulationScore';
+import GetScore from './pages/GetScore';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import BackButton from './components/BackButton';
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       { path: "quiz", element: <ProtectedRoute><QuizPhase /></ProtectedRoute> },
       { path: "quiz-score", element: <ProtectedRoute><QuizScore /></ProtectedRoute> },
       { path: "simulation-score", element: <ProtectedRoute><SimulationScore /></ProtectedRoute> },
+      { path: "get-score", element: <GetScore /> },
       { path: "*", element: <NotFound /> }
     ]
   }

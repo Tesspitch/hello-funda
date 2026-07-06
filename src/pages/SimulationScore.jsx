@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
 import bg from '../assets/img/background1.png';
 import { submitGameResult } from "../utils/googleSheetsAPI";
+import { ethicsData } from "../store/proceduresData";
 
 export default function SimulationScore() {
     const location = useLocation();
@@ -34,6 +35,9 @@ export default function SimulationScore() {
 
     const hasSubmittedRef = useRef(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showEthics, setShowEthics] = useState(true);
+
+    const procEthics = proc ? ethicsData[proc.id] : null;
 
     useEffect(() => {
         if (procedureData.status !== "completed" && !hasSubmittedRef.current) {
@@ -73,6 +77,55 @@ export default function SimulationScore() {
 
     const isPass = totalScore >= 60;
 
+    if (showEthics && procEthics && procEthics.length > 0) {
+        return (
+            <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 py-10" style={{ backgroundImage: `url(${bg})` }}>
+                <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col animate-pop-in">
+                    <div className="p-8 text-white text-center relative" style={{ backgroundColor: proc.color }}>
+                        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-pattern"></div>
+                        <h2 className="text-3xl font-bold relative z-10 mb-2">
+                            เกร็ดความรู้
+                        </h2>
+                        <p className="text-lg opacity-90 relative z-10">สิ่งสำคัญที่พึงระลึกเสมอ</p>
+                    </div>
+                    <div className="p-8 flex flex-col gap-8">
+                        <div className="bg-white px-6 py-10 sm:px-12 sm:py-12 rounded-[2rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative flex flex-col items-center">
+                            
+                            {/* Decorative Icon */}
+                            <div className="w-16 h-16 rounded-full flex items-center justify-center text-white mb-6 shadow-md relative z-10" style={{ backgroundColor: proc.color }}>
+                                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </div>
+                            
+                            <div className="w-full relative">
+                                {/* Quote Icon Top Left */}
+                                <span className="absolute -top-6 -left-4 text-7xl font-serif leading-none select-none opacity-20" style={{ color: proc.color }}>"</span>
+                                
+                                {procEthics.map((text, idx) => (
+                                    <p key={idx} className="text-gray-700 leading-[2.2rem] text-lg sm:text-[1.1rem] font-medium text-center relative z-10">
+                                        {text}
+                                    </p>
+                                ))}
+                                
+                                {/* Quote Icon Bottom Right */}
+                                <span className="absolute -bottom-12 -right-4 text-7xl font-serif leading-none select-none opacity-20" style={{ color: proc.color }}>"</span>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={() => setShowEthics(false)}
+                            className="mt-4 w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 active:scale-95"
+                            style={{ backgroundColor: proc.color }}
+                        >
+                            รับทราบ และดูสรุปผลคะแนน
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 py-10" style={{ backgroundImage: `url(${bg})` }}>
             {isSubmitting && (
@@ -84,7 +137,7 @@ export default function SimulationScore() {
                     </div>
                 </div>
             )}
-            
+
             <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
 
                 {/* Header */}

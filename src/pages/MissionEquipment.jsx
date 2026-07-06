@@ -196,12 +196,12 @@ export default function MissionEquipment() {
         }
 
         setShowModal(false);
-        navigate("/mission-sequence", { state: { proc, diffId } });
+        navigate("/mission-sequence", { state: { proc, diffId }, replace: true });
     };
 
     const handleModalClose = () => {
         setShowModal(false);
-        navigate("/mission-sequence", { state: { proc, diffId } });
+        navigate("/mission-sequence", { state: { proc, diffId }, replace: true });
     };
 
     return (

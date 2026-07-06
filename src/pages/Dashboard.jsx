@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useGameStore } from '../store/useGameStore';
 import bg from '../assets/img/background1.png';
 import logo from '../assets/icons/hellofunda.svg';
@@ -121,9 +121,21 @@ export default function Dashboard() {
                 {/* Header Section */}
                 <div className="flex flex-col items-center mb-8">
                     <img src={logo} alt="Hello Funda" className="w-[180px] md:w-[220px] mb-4 drop-shadow-md animate-logo-float" />
-                    <div className="bg-white/90 backdrop-blur-sm px-8 py-3 rounded-full shadow-md border-2 border-rose-100">
-                        <span className="text-gray-500 font-bold mr-2">Student ID:</span>
-                        <span className="text-[#FB8682] font-black text-xl tracking-wider">{player?.id || "N/A"}</span>
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="bg-white/90 backdrop-blur-sm px-8 py-3 rounded-full shadow-md border-2 border-rose-100">
+                            <span className="text-gray-500 font-bold mr-2">Student ID:</span>
+                            <span className="text-[#FB8682] font-black text-xl tracking-wider">{player?.id || "N/A"}</span>
+                        </div>
+                        {/* ปุ่มตรวจสอบผลการสอบ */}
+                        <Link
+                            to="/get-score"
+                            className="bg-[#FB8682] text-white px-6 py-3 rounded-full shadow-md font-bold text-sm sm:text-base hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 border-2 border-white/50"
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            ตรวจสอบประวัติการสอบ
+                        </Link>
                     </div>
                 </div>
 

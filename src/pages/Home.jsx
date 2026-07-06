@@ -57,6 +57,17 @@ export default function Home() {
                     </div>
                 </Link>
             </div>
+
+            {/* ปุ่มประวัติการสอบ (วงกลมเล็กมุมขวาล่าง) */}
+            <Link
+                to="/get-score"
+                title="ตรวจสอบผลการสอบ"
+                className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-14 h-14 bg-[#FB8682] text-white rounded-full flex items-center justify-center shadow-lg hover:bg-[#f4605b] hover:scale-110 active:scale-95 transition-all cursor-pointer border-2 border-white/50"
+            >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </Link>
         </div>
     );
 }

@@ -15,7 +15,7 @@ export default function BackButton() {
     // Intercept browser back button (POP) on any page except home, dashboard, and input-name
     const blocker = useBlocker(
         ({ historyAction, currentLocation }) => {
-            const noBlockPaths = ['/', '/dashboard', '/input-name'];
+            const noBlockPaths = ['/', '/dashboard', '/input-name', '/get-score'];
             if (noBlockPaths.includes(currentLocation.pathname)) return false;
             return historyAction === 'POP';
         }
@@ -29,8 +29,12 @@ export default function BackButton() {
             navigate('/');
         } else if (location.pathname === '/select') {
             setUiPendingDest('/input-name');
+        } else if (location.pathname === '/get-score') {
+            navigate('/dashboard');
+        } else if (['/quiz', '/mission-equipment', '/mission-sequence', '/simulation-score'].includes(location.pathname)) {
+            setUiPendingDest('/select');
         } else {
-            // หน้าอื่นๆ ใช้ navigate(-1) ซึ่งจะถูก useBlocker จับได้เมื่อเป็น POP
+            // สำหรับกรณีอื่นๆ ค่อยใช้ navigate(-1)
             navigate(-1);
         }
     };

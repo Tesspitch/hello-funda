@@ -29,7 +29,7 @@ export const sendDataToGoogleSheet = async (scriptUrl, payload) => {
 };
 
 // TODO: นำ URL ของ Web App จาก Google Apps Script มาใส่ที่นี่
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKbuy86FiUSlvf3LR6Hfh9us9vaJ0y7YvNHbTCjV1PbnK53nJZ4JrRJeq8sYgiSIe1_Q/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhowzkErQSJr0zWnGZs2_EikB0veV3QnrO_yhHs43Vc-KaixxR7NiAgpuX0wKc87TTSQ/exec";
 
 /**
  * ฟังก์ชันส่งผลการเล่นเกมไปยัง Google Sheets

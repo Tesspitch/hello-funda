@@ -231,12 +231,12 @@ export default function MissionSequence() {
         }
 
         setShowModal(false);
-        navigate("/quiz", { state: { type: 'post', proc, diffId } });
+        navigate("/quiz", { state: { type: 'post', proc, diffId }, replace: true });
     };
 
     const handleModalClose = () => {
         setShowModal(false);
-        navigate("/quiz", { state: { type: 'post', proc, diffId } });
+        navigate("/quiz", { state: { type: 'post', proc, diffId }, replace: true });
     };
 
     return (
