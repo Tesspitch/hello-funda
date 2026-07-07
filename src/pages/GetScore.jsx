@@ -170,7 +170,7 @@ const StudentExamHistory = () => {
                                     </table>
                                 </div>
                             </div>
-                            <p className="text-center text-gray-400 text-xs mt-4">* หมายเหตุ: ตอนนี้ใช้ข้อมูลจำลอง (Mock Data) หากต้องการใช้ของจริงต้องอัปเดต Google Apps Script</p>
+
                         </div>
                     )}
 
