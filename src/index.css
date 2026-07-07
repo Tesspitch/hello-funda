@@ -5,14 +5,13 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  font-family: 'Fredoka', cursive;
+  font-family: 'Fredoka', 'Noto Sans Thai', sans-serif;
 }
 
 *,
 *::before,
 *::after {
-  font-family: 'Fredoka', cursive;
-
+  font-family: 'Fredoka', 'Noto Sans Thai', sans-serif;
 }
 
 /* 1. กำหนด Animation ใหม่ */
