@@ -15,11 +15,11 @@ export default function QuizPhase() {
 
     const isPreTest = type === 'pre';
     const allQuestions = proc ? (quizData[proc.id] || []) : [];
-    
+
     const [questions] = useState(() => {
         if (!proc) return [];
         let selectedQuestions = isPreTest ? allQuestions.slice(0, 5) : allQuestions.slice(5, 10);
-        
+
         const shuffleArray = (array) => {
             const newArr = [...array];
             for (let i = newArr.length - 1; i > 0; i--) {
@@ -47,10 +47,10 @@ export default function QuizPhase() {
 
     // สถานะว่าเริ่มทำแบบทดสอบหรือยัง
     const [hasStarted, setHasStarted] = useState(false);
-    
+
     // สถานะยืนยันการส่งคำตอบ
     const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
-    
+
     // Loading State for Post-test
     const [isLoading, setIsLoading] = useState(!isPreTest);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -101,18 +101,18 @@ export default function QuizPhase() {
                 <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col items-center justify-center font-sans border border-gray-100 text-center p-8 md:p-10 animate-jiggle">
                     <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-inner" style={{ backgroundColor: proc.bgLight, color: proc.color }}>
                         {isPreTest ? (
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span className="text-4xl drop-shadow-sm"> 📝</span>
                         ) : (
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                            <span className="text-4xl drop-shadow-sm"> 🎓</span>
                         )}
                     </div>
-                    
+
                     <h1 className="text-2xl md:text-3xl font-bold mb-3 leading-tight" style={{ color: proc.color }}>
                         เตรียมพร้อมสำหรับ
                         <br />
                         {isPreTest ? "แบบทดสอบก่อนเรียน" : "แบบทดสอบหลังเรียน"}
                     </h1>
-                    
+
                     <div className="bg-gray-50 rounded-xl p-4 w-full mb-8 border border-gray-100">
                         <p className="text-gray-700 font-medium mb-1">
                             หัตถการ: <span style={{ color: proc.color }}>{proc.name}</span>
@@ -192,10 +192,10 @@ export default function QuizPhase() {
     return (
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 py-8" style={{ backgroundImage: `url(${bg})` }}>
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col font-sans border border-gray-100">
-                
+
                 {/* Header Section */}
                 <div className="p-5 md:p-6 flex flex-col" style={{ backgroundColor: hexToRgba(proc.color, 0.03) }}>
-                    
+
                     <h1 className="text-lg md:text-xl font-bold mb-4" style={{ color: proc.color }}>
                         {isPreTest ? "แบบทดสอบก่อนเรียน" : "แบบทดสอบหลังเรียน"} : {proc.name}
                     </h1>
@@ -206,9 +206,9 @@ export default function QuizPhase() {
                             ข้อที่ {currentIndex + 1} / {questions.length}
                         </span>
                         <div className="bg-gray-200 h-2 flex-1 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full rounded-full transition-all duration-300"
-                                style={{ 
+                                style={{
                                     width: `${((currentIndex + 1) / questions.length) * 100}%`,
                                     backgroundColor: proc.color
                                 }}
@@ -221,7 +221,7 @@ export default function QuizPhase() {
 
                 {/* Question & Options */}
                 <div className="p-5 md:p-6 flex-1 flex flex-col">
-                    
+
                     <div className="mb-6">
                         <h2 className="text-lg md:text-xl font-bold text-gray-800 leading-relaxed">
                             {currentQ.question}
@@ -235,18 +235,17 @@ export default function QuizPhase() {
                                 <button
                                     key={index}
                                     onClick={() => handleSelectOption(index)}
-                                    className={`text-left p-3 md:p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between gap-3 ${
-                                        isSelected 
-                                            ? 'shadow-md transform scale-[1.01]' 
-                                            : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'
-                                    }`}
+                                    className={`text-left p-3 md:p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between gap-3 ${isSelected
+                                        ? 'shadow-md transform scale-[1.01]'
+                                        : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'
+                                        }`}
                                     style={{
                                         borderColor: isSelected ? hexToRgba(proc.color, 0.3) : '',
                                         backgroundColor: isSelected ? hexToRgba(proc.color, 0.08) : '',
                                     }}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div 
+                                        <div
                                             className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 transition-colors text-base shadow-sm`}
                                             style={{
                                                 backgroundColor: isSelected ? proc.color : '#f1f5f9',
@@ -256,15 +255,15 @@ export default function QuizPhase() {
                                             {String.fromCharCode(65 + index)}
                                         </div>
                                         <span className={`text-base md:text-lg ${isSelected ? 'font-bold' : 'text-gray-700'}`}
-                                              style={{ color: isSelected ? proc.color : '' }}
+                                            style={{ color: isSelected ? proc.color : '' }}
                                         >
                                             {option}
                                         </span>
                                     </div>
-                                    
+
                                     {/* Optional: Checkmark icon for selected */}
                                     <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${isSelected ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
-                                         style={{ backgroundColor: proc.color }}
+                                        style={{ backgroundColor: proc.color }}
                                     >
                                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
@@ -282,12 +281,12 @@ export default function QuizPhase() {
                         >
                             ย้อนกลับ
                         </button>
-                        
+
                         <button
                             onClick={handleNext}
                             disabled={answers[currentIndex] === null}
                             className={`flex-1 py-3.5 md:py-4 rounded-2xl font-bold text-white shadow-md transition-all ${answers[currentIndex] === null ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-1 hover:shadow-lg'}`}
-                            style={{ 
+                            style={{
                                 backgroundColor: answers[currentIndex] !== null ? proc.color : '#cbd5e1',
                                 boxShadow: answers[currentIndex] !== null ? `0 10px 15px -3px ${hexToRgba(proc.color, 0.4)}` : ''
                             }}
@@ -302,20 +301,20 @@ export default function QuizPhase() {
             {showSubmitConfirm && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-jiggle">
-                        <div className="flex justify-center mb-4">
-                            <svg className="w-16 h-16" style={{ color: proc.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-inner" style={{ backgroundColor: hexToRgba(proc.color, 0.1), color: proc.color }}>
+                            <span className="text-5xl drop-shadow-sm">❓</span>
                         </div>
                         <h3 className="text-2xl font-bold mb-2 text-gray-800">ยืนยันการส่งคำตอบ?</h3>
                         <p className="text-gray-600 mb-6">คุณต้องการยืนยันการส่งคำตอบ และไปยังขั้นตอนต่อไปหรือไม่?</p>
-                        
+
                         <div className="flex w-full gap-3">
-                            <button 
+                            <button
                                 onClick={() => setShowSubmitConfirm(false)}
                                 className="w-full py-3.5 rounded-xl font-bold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors"
                             >
                                 ยกเลิก
                             </button>
-                            <button 
+                            <button
                                 onClick={handleConfirmSubmit}
                                 className="w-full py-3.5 rounded-xl font-bold text-white transition-all shadow-md hover:brightness-110"
                                 style={{ backgroundColor: proc.color }}

@@ -4,6 +4,7 @@ import { useGameStore } from "../store/useGameStore";
 import bg from '../assets/img/background1.png';
 import { submitGameResult } from "../utils/googleSheetsAPI";
 import { ethicsData } from "../store/proceduresData";
+import { toPng } from "html-to-image";
 
 export default function SimulationScore() {
     const location = useLocation();
@@ -36,8 +37,41 @@ export default function SimulationScore() {
     const hasSubmittedRef = useRef(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showEthics, setShowEthics] = useState(true);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const procEthics = proc ? ethicsData[proc.id] : null;
+    const captureRef = useRef(null);
+
+    const handleDownloadImage = async () => {
+        if (!captureRef.current) return;
+        setIsDownloading(true);
+        try {
+            // Give it a small delay for styling to stabilize
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            const dataUrl = await toPng(captureRef.current, {
+                pixelRatio: 2,
+                backgroundColor: '#ffffff',
+                cacheBust: false, // Don't use cacheBust to avoid Vite dev server CORS issues
+                filter: (node) => {
+                    return !(node.hasAttribute && node.hasAttribute('data-html2canvas-ignore'));
+                }
+            });
+
+            const link = document.createElement('a');
+            link.download = `score-${playerId || 'result'}.png`;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error capturing image:', error);
+            const errMsg = error instanceof Error ? error.message : (typeof error === 'string' ? error : JSON.stringify(error));
+            alert('เกิดข้อผิดพลาดในการบันทึกภาพ: ' + errMsg);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
 
     useEffect(() => {
         if (procedureData.status !== "completed" && !hasSubmittedRef.current) {
@@ -87,27 +121,32 @@ export default function SimulationScore() {
                             เกร็ดความรู้
                         </h2>
                         <p className="text-lg opacity-90 relative z-10">สิ่งสำคัญที่พึงระลึกเสมอ</p>
+                        <div className="mt-4 relative z-10">
+                            <span className="bg-opacity-20 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-sm backdrop-blur-sm">
+                                รหัสนิสิต: {playerId || "ไม่ระบุ"}
+                            </span>
+                        </div>
                     </div>
                     <div className="p-8 flex flex-col gap-8">
                         <div className="bg-white px-6 py-10 sm:px-12 sm:py-12 rounded-[2rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative flex flex-col items-center">
-                            
+
                             {/* Decorative Icon */}
                             <div className="w-16 h-16 rounded-full flex items-center justify-center text-white mb-6 shadow-md relative z-10" style={{ backgroundColor: proc.color }}>
                                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                             </div>
-                            
+
                             <div className="w-full relative">
                                 {/* Quote Icon Top Left */}
                                 <span className="absolute -top-6 -left-4 text-7xl font-serif leading-none select-none opacity-20" style={{ color: proc.color }}>"</span>
-                                
+
                                 {procEthics.map((text, idx) => (
                                     <p key={idx} className="text-gray-700 leading-[2.2rem] text-lg sm:text-[1.1rem] font-medium text-center relative z-10">
                                         {text}
                                     </p>
                                 ))}
-                                
+
                                 {/* Quote Icon Bottom Right */}
                                 <span className="absolute -bottom-12 -right-4 text-7xl font-serif leading-none select-none opacity-20" style={{ color: proc.color }}>"</span>
                             </div>
@@ -123,6 +162,7 @@ export default function SimulationScore() {
                     </div>
                 </div>
             </div>
+
         );
     }
 
@@ -138,27 +178,27 @@ export default function SimulationScore() {
                 </div>
             )}
 
-            <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
+            <div ref={captureRef} className="bg-white rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col">
 
                 {/* Header */}
-                <div className="p-8 text-white text-center relative" style={{ backgroundColor: proc.color }}>
+                <div className="p-8 pb-16 text-white text-center relative" style={{ backgroundColor: proc.color }}>
                     <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-pattern"></div>
                     <div className="flex justify-center mb-4 relative z-10">
                         {isPass ? (
-                            <svg className="w-16 h-16 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
-                            </svg>
+                            <span className="text-6xl">🏆</span>
                         ) : (
-                            <svg className="w-16 h-16 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.866 8.21 8.21 0 0 0 3 2.48Z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />
-                            </svg>
+                            <span className="text-6xl">🔥</span>
                         )}
                     </div>
                     <h1 className="text-3xl font-bold relative z-10 mb-2">
                         {proc.name}
                     </h1>
                     <p className="text-lg opacity-90 relative z-10">{isPass ? "ยินดีด้วย! คุณผ่านการทดสอบ" : "พยายามอีกนิด! คุณทำได้"}</p>
+                    <div className="mt-4 relative z-10">
+                        <span className="bg-opacity-20 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-sm backdrop-blur-sm">
+                            รหัสนิสิต: {playerId || "ไม่ระบุ"}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -188,14 +228,39 @@ export default function SimulationScore() {
                         } />
                     </div>
 
-                    {/* Dashboard Button */}
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="mt-6 w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1"
-                        style={{ backgroundColor: proc.color }}
-                    >
-                        กลับสู่หน้าหลัก (Dashboard)
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 mt-6" data-html2canvas-ignore="true">
+                        <button
+                            onClick={handleDownloadImage}
+                            disabled={isDownloading}
+                            className={`flex-1 py-4 rounded-xl font-bold text-lg border-2 shadow-sm transform transition-all flex items-center justify-center gap-2 ${isDownloading
+                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                : 'text-gray-700 hover:bg-gray-50 hover:-translate-y-1'
+                                }`}
+                            style={!isDownloading ? { borderColor: proc.color } : {}}
+                        >
+                            {isDownloading ? (
+                                <>
+                                    <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                                    กำลังบันทึก...
+                                </>
+                            ) : (
+                                <>
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                    </svg>
+                                    บันทึกผล
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className="flex-1 py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 flex items-center justify-center"
+                            style={{ backgroundColor: proc.color }}
+                        >
+                            กลับสู่หน้าหลัก
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
