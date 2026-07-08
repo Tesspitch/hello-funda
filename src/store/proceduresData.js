@@ -57,6 +57,7 @@ import stethoscope from "../assets/img/suction/13_stethoscope.webp";            
 import kidney_basin from "../assets/img/suction/14_kidney_basin.webp";          // NG               // FOLEY
 import glass from "../assets/img/suction/15_glass.webp";                        // NG
 import alcohol_70 from "../assets/img/suction/16_70_alcohol.webp";              // NG  // FALSE
+import clean_water from "../assets/img/suction/clean_water.webp"
 
 
 ////////////////////
@@ -85,6 +86,7 @@ import syring_10_cc from "../assets/img/foley/syring_10.webp";
 import transport from "../assets/img/foley/transport.webp";
 import uc from "../assets/img/foley/uc.webp";
 import ma from "../assets/img/foley/ma.webp";
+import savlon from "../assets/img/foley/savlon.webp"
 
 
 
@@ -111,91 +113,92 @@ export const timeConfig = {
 // ข้อมูลชื่ออุปกรณ์กลาง เพื่อให้แก้ไขที่เดียว
 export const EQUIPMENT_NAMES = {
     MATTRESS_PROTECTOR: "ผ้ารองกันเปื้อน",
-    STERILE_GLOVE: "ถุงมือ Sterile",
+    STERILE_GLOVE: "ถุงมือ Sterile 1 คู่",
     STERILE_GLOVE_2_PAIRS: "ถุงมือ Sterile 2 คู่",
-    CLEAN_GLOVE: "ถุงมือสะอาด",
+    CLEAN_GLOVE: "ถุงมือสะอาด 2 คู่",
     CLEAN_GLOVE_1_PAIR: "ถุงมือสะอาด 1 คู่",
     NSS_09: "0.9% NSS",
     NSS: "0.9% NSS",
-    COTTON_BUD: "ไม้พันสำลี",
-    AMBU_BAG: "Ambu Bag",
+    COTTON_BUD: "ไม้พันสำลี 5 ก้าน",
+    AMBU_BAG: "Ambu Bag และ สาย",
     SYRINGE_5CC: "Syringe 5 cc",
+    SYRINGE: "Syringe",
     ACEPTO_SYRINGE: "Acepto Syringe",
     FLOW_METER: "Flow Meter",
     TISSUE: "ทิชชู่",
     NIPPLE: "Nipple",
     STERILE_WATER_10CC: "Sterile water 10 cc",
-    STERILE_WATER: "Sterile Water",
+    CLEAN_WATER: "น้ำสะอาด",
     HAND_GEL_WASH: "เจลแอลกอฮอล์ล้างมือ",
-    HAND_GEL: "เจลแอลกอฮอล์",
     NG_LINE: "สาย NG",
-    SUCTION_LINE: "สาย Suction",
+    SUCTION_LINE: "สาย Suction 2 สาย",
     COTTON_BALL_5: "สำลีแห้ง 5 ก้อน",
-    COTTON_BALL: "สำลีก้อน",
     STETHOSCOPE: "Stethoscope",
     KIDNEY_BASIN: "ชามรูปไต",
-    GLASS: "แก้วน้ำ",
+    GLASS: "แก้วน้ำ 1 แก้ว",
     GLASS_2: "แก้วน้ำ 2 แก้ว",
     ALCOHOL_70: "70% Alcohol",
     TRAY: "ถาดสี่เหลี่ยม",
     KY_JELLY: "KY Jelly",
     MICROPORE: "Micropore",
     URINE_BAG: "Urine Bag",
-    URINE_CATHETER: "ชุดสวนปัสสาวะ",
     EYE_PAD: "ผ้าปิดตา",
     NEEDLE: "เข็มเบอร์ 18",
     SYRINGE_10CC: "Syringe 10 cc",
     TRANSPORT: "Transport",
     RUBBER_APRON: "ผ้ายางกันเปื้อน",
-    URINE_CATHETER_SET: "สายสวนปัสสาวะ",
-    FLASHLIGHT: "ไฟฉาย"
+    URINE_CATHETER_LINE: "สายสวนปัสสาวะ",
+    URINE_CATHETER_SET: "ชุดสวนปัสสาวะ",
+    FLASHLIGHT: "ไฟฉาย",
+    SAVLOC: "น้ำยาทำความสะอาด"
 };
 
 // ข้อมูลอุปกรณ์สำหรับแต่ละหัตถการ
 export const equipmentData = {
     suction: [
         { id: 1, name: EQUIPMENT_NAMES.MATTRESS_PROTECTOR, img: mattress_protector, isCorrect: false },
-        { id: 2, name: EQUIPMENT_NAMES.STERILE_GLOVE, img: sterile_glove, isCorrect: true },
-        { id: 3, name: EQUIPMENT_NAMES.CLEAN_GLOVE, img: clean_glove, isCorrect: true },
-        { id: 4, name: EQUIPMENT_NAMES.NSS_09, img: nss, isCorrect: true },
-        { id: 5, name: EQUIPMENT_NAMES.COTTON_BUD, img: cotton_bud, isCorrect: true },
-        { id: 6, name: EQUIPMENT_NAMES.AMBU_BAG, img: ambu_bag, isCorrect: true },
-        { id: 7, name: EQUIPMENT_NAMES.SYRINGE_5CC, img: syring5cc, isCorrect: true },
+        { id: 2, name: EQUIPMENT_NAMES.STERILE_GLOVE, img: sterile_glove, isCorrect: true },  //
+        { id: 3, name: EQUIPMENT_NAMES.CLEAN_GLOVE, img: clean_glove, isCorrect: true },   // 
+        { id: 4, name: EQUIPMENT_NAMES.NSS_09, img: nss, isCorrect: true },  //
+        { id: 5, name: EQUIPMENT_NAMES.COTTON_BUD, img: cotton_bud, isCorrect: true },  //
+        { id: 6, name: EQUIPMENT_NAMES.AMBU_BAG, img: ambu_bag, isCorrect: true },   //
+        { id: 7, name: EQUIPMENT_NAMES.SYRINGE, img: syring5cc, isCorrect: true },  //
         { id: 8, name: EQUIPMENT_NAMES.ACEPTO_SYRINGE, img: acepto_syring, isCorrect: false },
-        { id: 9, name: EQUIPMENT_NAMES.FLOW_METER, img: flow_meter, isCorrect: true },
+        { id: 9, name: EQUIPMENT_NAMES.FLOW_METER, img: flow_meter, isCorrect: true },  //
         { id: 10, name: EQUIPMENT_NAMES.TISSUE, img: tissue, isCorrect: false },
-        { id: 11, name: EQUIPMENT_NAMES.NIPPLE, img: chada, isCorrect: true },
-        { id: 12, name: EQUIPMENT_NAMES.STERILE_WATER_10CC, img: sterile_water, isCorrect: true },
-        { id: 13, name: EQUIPMENT_NAMES.HAND_GEL_WASH, img: handgel, isCorrect: true },
+        { id: 11, name: EQUIPMENT_NAMES.NIPPLE, img: chada, isCorrect: false },
+        { id: 12, name: EQUIPMENT_NAMES.CLEAN_WATER, img: clean_water, isCorrect: true },  //
+        { id: 13, name: EQUIPMENT_NAMES.HAND_GEL_WASH, img: handgel, isCorrect: true },  // 
         { id: 14, name: EQUIPMENT_NAMES.NG_LINE, img: ng_line, isCorrect: false },
-        { id: 15, name: EQUIPMENT_NAMES.SUCTION_LINE, img: suction_line, isCorrect: true },
-        { id: 16, name: EQUIPMENT_NAMES.COTTON_BALL_5, img: cotton_ball, isCorrect: true },
-        { id: 17, name: EQUIPMENT_NAMES.STETHOSCOPE, img: stethoscope, isCorrect: true },
-        { id: 18, name: EQUIPMENT_NAMES.KIDNEY_BASIN, img: kidney_basin, isCorrect: true },
-        { id: 19, name: EQUIPMENT_NAMES.GLASS, img: glass, isCorrect: true },
-        { id: 20, name: EQUIPMENT_NAMES.ALCOHOL_70, img: alcohol_70, isCorrect: true }
+        { id: 15, name: EQUIPMENT_NAMES.SUCTION_LINE, img: suction_line, isCorrect: true },  //
+        { id: 16, name: EQUIPMENT_NAMES.COTTON_BALL_5, img: cotton_ball, isCorrect: true },  //
+        { id: 17, name: EQUIPMENT_NAMES.STETHOSCOPE, img: stethoscope, isCorrect: true },  //
+        { id: 18, name: EQUIPMENT_NAMES.KIDNEY_BASIN, img: kidney_basin, isCorrect: true }, //
+        { id: 19, name: EQUIPMENT_NAMES.GLASS, img: glass, isCorrect: true },  //
+        { id: 20, name: EQUIPMENT_NAMES.ALCOHOL_70, img: alcohol_70, isCorrect: true }  //
     ],
     foley_catheter: [
-        { id: 1, name: EQUIPMENT_NAMES.STERILE_GLOVE_2_PAIRS, img: sterile_glove, isCorrect: true },
-        { id: 2, name: EQUIPMENT_NAMES.CLEAN_GLOVE_1_PAIR, img: clean_glove, isCorrect: true },
+        { id: 1, name: EQUIPMENT_NAMES.STERILE_GLOVE_2_PAIRS, img: sterile_glove, isCorrect: true },  //
+        { id: 2, name: EQUIPMENT_NAMES.CLEAN_GLOVE_1_PAIR, img: clean_glove, isCorrect: true },   //
         { id: 3, name: EQUIPMENT_NAMES.SYRINGE_5CC, img: syring5cc, isCorrect: false },
-        { id: 4, name: EQUIPMENT_NAMES.STERILE_WATER, img: sterile_water, isCorrect: true },
-        { id: 5, name: EQUIPMENT_NAMES.HAND_GEL, img: handgel, isCorrect: true },
-        { id: 6, name: EQUIPMENT_NAMES.KIDNEY_BASIN, img: kidney_basin, isCorrect: true },
+        { id: 4, name: EQUIPMENT_NAMES.STERILE_WATER_10CC, img: sterile_water, isCorrect: true },    //
+        { id: 5, name: EQUIPMENT_NAMES.HAND_GEL_WASH, img: handgel, isCorrect: true },    //
+        { id: 6, name: EQUIPMENT_NAMES.KIDNEY_BASIN, img: kidney_basin, isCorrect: true },   //
         { id: 7, name: EQUIPMENT_NAMES.MATTRESS_PROTECTOR, img: mattress_protector, isCorrect: false },
         { id: 8, name: EQUIPMENT_NAMES.TRAY, img: tray, isCorrect: false },
-        { id: 9, name: EQUIPMENT_NAMES.KY_JELLY, img: ky, isCorrect: true },
+        { id: 9, name: EQUIPMENT_NAMES.KY_JELLY, img: ky, isCorrect: true },  //
         { id: 10, name: EQUIPMENT_NAMES.MICROPORE, img: micropore, isCorrect: false },
         { id: 11, name: EQUIPMENT_NAMES.URINE_BAG, img: urine_bag, isCorrect: true },
-        { id: 12, name: EQUIPMENT_NAMES.URINE_CATHETER, img: ucs, isCorrect: true },
-        { id: 13, name: EQUIPMENT_NAMES.NSS, img: nss, isCorrect: true },
-        { id: 14, name: EQUIPMENT_NAMES.EYE_PAD, img: fd, isCorrect: true },
-        { id: 15, name: EQUIPMENT_NAMES.NEEDLE, img: needle, isCorrect: true },
-        { id: 16, name: EQUIPMENT_NAMES.SYRINGE_10CC, img: syring_10_cc, isCorrect: true },
-        { id: 17, name: EQUIPMENT_NAMES.TISSUE, img: tissue, isCorrect: false },
-        { id: 18, name: EQUIPMENT_NAMES.TRANSPORT, img: transport, isCorrect: true },
-        { id: 19, name: EQUIPMENT_NAMES.RUBBER_APRON, img: ma, isCorrect: true },
-        { id: 20, name: EQUIPMENT_NAMES.URINE_CATHETER_SET, img: uc, isCorrect: true },
+        { id: 12, name: EQUIPMENT_NAMES.NSS, img: nss, isCorrect: false },
+        { id: 13, name: EQUIPMENT_NAMES.EYE_PAD, img: fd, isCorrect: true },
+        { id: 14, name: EQUIPMENT_NAMES.NEEDLE, img: needle, isCorrect: true },
+        { id: 15, name: EQUIPMENT_NAMES.SYRINGE_10CC, img: syring_10_cc, isCorrect: true },
+        { id: 16, name: EQUIPMENT_NAMES.TISSUE, img: tissue, isCorrect: false },
+        { id: 17, name: EQUIPMENT_NAMES.TRANSPORT, img: transport, isCorrect: true },
+        { id: 18, name: EQUIPMENT_NAMES.RUBBER_APRON, img: ma, isCorrect: true },
+        { id: 19, name: EQUIPMENT_NAMES.URINE_CATHETER_LINE, img: uc, isCorrect: true },
+        { id: 20, name: EQUIPMENT_NAMES.SAVLOC, img: savlon, isCorrect: true },
+        { id: 21, name: EQUIPMENT_NAMES.URINE_CATHETER_SET, img: ucs, isCorrect: true }
     ],
     ng_tube: [
         { id: 1, name: EQUIPMENT_NAMES.STERILE_GLOVE, img: sterile_glove, isCorrect: true },
@@ -204,7 +207,7 @@ export const equipmentData = {
         { id: 4, name: EQUIPMENT_NAMES.SYRINGE_5CC, img: syring5cc, isCorrect: false },
         { id: 5, name: EQUIPMENT_NAMES.STERILE_WATER_10CC, img: sterile_water, isCorrect: false },
         { id: 6, name: EQUIPMENT_NAMES.HAND_GEL_WASH, img: handgel, isCorrect: true },
-        { id: 7, name: EQUIPMENT_NAMES.COTTON_BALL, img: cotton_ball, isCorrect: false },
+        { id: 7, name: EQUIPMENT_NAMES.COTTON_BALL_5, img: cotton_ball, isCorrect: false },
         { id: 8, name: EQUIPMENT_NAMES.STETHOSCOPE, img: stethoscope, isCorrect: true },
         { id: 9, name: EQUIPMENT_NAMES.KIDNEY_BASIN, img: kidney_basin, isCorrect: true },
         { id: 10, name: EQUIPMENT_NAMES.GLASS_2, img: glass, isCorrect: true },

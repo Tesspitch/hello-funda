@@ -24,6 +24,11 @@ export default function MissionSequence() {
     const [currentPartIndex, setCurrentPartIndex] = useState(0);
     const [allSelectedSteps, setAllSelectedSteps] = useState({});
 
+    const sequenceStateRef = useRef({ selectedSteps: [], allSelectedSteps: {}, currentPartIndex: 0 });
+    useEffect(() => {
+        sequenceStateRef.current = { selectedSteps, allSelectedSteps, currentPartIndex };
+    }, [selectedSteps, allSelectedSteps, currentPartIndex]);
+
     // Timer State
     const initialTime = (proc && diffId && timeConfig[proc.id]?.[diffId]?.sequence)
         ? timeConfig[proc.id][diffId].sequence * 60
@@ -106,15 +111,46 @@ export default function MissionSequence() {
     }
 
     const handleTimeUp = () => {
+        const { selectedSteps: currentSelected, allSelectedSteps: currentAll, currentPartIndex: currentIdx } = sequenceStateRef.current;
+
+        const finalAllSelected = { ...currentAll, [currentIdx]: currentSelected };
+        setAllSelectedSteps(finalAllSelected);
+
+        const parts = sequenceData[proc.id] || [];
+        let correctCount = 0;
+        let totalSteps = 0;
+
+        const verifiedSelectedSteps = {};
+        
+        parts.forEach((part, pIndex) => {
+            const originalSteps = part.steps || [];
+            totalSteps += originalSteps.length;
+            const userSteps = finalAllSelected[pIndex] || [];
+
+            const verified = userSteps.map((step, sIndex) => {
+                const isCorrect = originalSteps[sIndex] && step.id === originalSteps[sIndex].id;
+                if (isCorrect) correctCount++;
+                return { ...step, isVerified: true, isCorrect };
+            });
+            verifiedSelectedSteps[pIndex] = verified;
+        });
+
+        setSelectedSteps(verifiedSelectedSteps[currentIdx] || []);
+        setAllSelectedSteps(verifiedSelectedSteps);
+
+        let calculatedScore = totalSteps > 0 ? Math.round((correctCount / totalSteps) * 40) : 0;
+
+        setScore(calculatedScore);
         setIsSubmitted(true);
+
         if (updateMissionSequenceResult) {
-            updateMissionSequenceResult(proc.id, diffId, 0, initialTime);
+            updateMissionSequenceResult(proc.id, diffId, calculatedScore, initialTime);
         }
-        setScore(0);
+
         setModalInfo({
             type: 'timeout',
             title: 'หมดเวลาแล้ว!',
-            message: 'เวลาในการจัดลำดับหมดลงแล้ว ระบบจะนำคุณไปยังส่วนต่อไป'
+            message: 'เวลาในการจัดลำดับหมดลงแล้ว ระบบได้ทำการส่งคำตอบเท่าที่คุณจัดลำดับไว้ ไปสู่ขั้นตอนถัดไปกันเลย'
         });
         setShowModal(true);
     };

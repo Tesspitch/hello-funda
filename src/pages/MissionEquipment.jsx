@@ -16,6 +16,11 @@ export default function MissionEquipment() {
     const diffId = stateData?.diffId;
 
     const [selectedItems, setSelectedItems] = useState([]);
+    const selectedItemsRef = useRef([]);
+    useEffect(() => {
+        selectedItemsRef.current = selectedItems;
+    }, [selectedItems]);
+
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isChecked, setIsChecked] = useState(false); // added isChecked state
     const [score, setScore] = useState(0);
@@ -164,16 +169,35 @@ export default function MissionEquipment() {
     }
 
     const handleTimeUp = () => {
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        const currentSelected = selectedItemsRef.current;
+
+        const evaluatedItems = currentSelected.map((item) => {
+            if (item.isCorrect !== false) correctCount++;
+            else wrongCount++;
+            return { ...item, isVerified: true };
+        });
+
+        setSelectedItems(evaluatedItems);
+
+        // คำนวณคะแนนเต็ม 40 (หักลบจำนวนที่เลือกผิด)
+        let calculatedScore = totalCorrectNeeded > 0 ? Math.round(((correctCount - wrongCount) / totalCorrectNeeded) * 40) : 0;
+        calculatedScore = Math.max(0, Math.min(40, calculatedScore));
+
+        setScore(calculatedScore);
         setIsChecked(true);
         setIsSubmitted(true);
+        
         if (updateMissionEquipmentResult) {
-            updateMissionEquipmentResult(proc.id, diffId, 0, initialTime);
+            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, initialTime);
         }
-        setScore(0);
+        
         setModalInfo({
             type: 'timeout',
             title: 'หมดเวลาแล้ว!',
-            message: 'เวลาในการเตรียมอุปกรณ์หมดลงแล้ว ไปสู่ขั้นตอนถัดไปกันเลย'
+            message: 'เวลาในการเตรียมอุปกรณ์หมดลงแล้ว ระบบได้ทำการส่งคำตอบเท่าที่คุณเลือกไว้ ไปสู่ขั้นตอนถัดไปกันเลย'
         });
         setShowModal(true);
     };
