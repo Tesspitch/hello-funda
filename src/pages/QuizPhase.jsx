@@ -18,7 +18,7 @@ export default function QuizPhase() {
 
     const [questions] = useState(() => {
         if (!proc) return [];
-        let selectedQuestions = isPreTest ? allQuestions.slice(0, 5) : allQuestions.slice(5, 10);
+        let selectedQuestions = allQuestions; // ใช้ทั้ง 10 ข้อ ไม่แยก pre-test/post-test
 
         const shuffleArray = (array) => {
             const newArr = [...array];
@@ -167,7 +167,7 @@ export default function QuizPhase() {
         let calculatedScore = 0;
         answers.forEach((ans, idx) => {
             if (ans === questions[idx].correctAnswer) {
-                calculatedScore += 2; // 5 ข้อ ข้อละ 2 คะแนน รวม 10
+                calculatedScore += 1; // 10 ข้อ ข้อละ 1 คะแนน รวม 10
             }
         });
 

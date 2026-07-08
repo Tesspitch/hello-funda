@@ -1,6 +1,6 @@
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useGameStore } from "../store/useGameStore";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import bg from '../assets/img/background1.png';
 import { equipmentData, timeConfig } from "../store/proceduresData";
 
@@ -32,9 +32,47 @@ export default function MissionEquipment() {
     // Timer State
     const [timeLeft, setTimeLeft] = useState(initialTime);
 
-    // ดึงรายการอุปกรณ์ตามหัตถการที่เลือก
-    const currentEquipmentList = proc ? (equipmentData[proc.id] || []) : [];
-    const totalCorrectNeeded = currentEquipmentList.filter(i => i.isCorrect !== false).length;
+    // ดึงรายการอุปกรณ์ตามหัตถการที่เลือก โดยรวมอุปกรณ์ทั้งหมดจากทุกหัตถการเข้าด้วยกัน
+    const { currentEquipmentList, totalCorrectNeeded } = useMemo(() => {
+        if (!proc) return { currentEquipmentList: [], totalCorrectNeeded: 0 };
+        
+        const allEquipments = [];
+        const seenNames = new Set();
+        
+        // 1. รวมอุปกรณ์ทั้งหมด (ไม่ให้ซ้ำชื่อ)
+        Object.values(equipmentData).forEach(eqList => {
+            eqList.forEach(eq => {
+                if (!seenNames.has(eq.name)) {
+                    seenNames.add(eq.name);
+                    allEquipments.push({
+                        name: eq.name,
+                        img: eq.img,
+                        icon: eq.icon
+                    });
+                }
+            });
+        });
+
+        // 2. หาว่ามีชิ้นไหนบ้างที่ถูกต้องสำหรับหัตถการนี้
+        const correctEquipmentsForProc = (equipmentData[proc.id] || [])
+            .filter(e => e.isCorrect !== false)
+            .map(e => e.name);
+
+        // 3. กำหนด isCorrect ใหม่ และสร้าง id ใหม่
+        const combinedEquipments = allEquipments.map((eq, index) => ({
+            ...eq,
+            id: index + 1,
+            isCorrect: correctEquipmentsForProc.includes(eq.name)
+        }));
+
+        // 4. สุ่มลำดับ (Randomize)
+        const shuffled = combinedEquipments.sort(() => Math.random() - 0.5);
+
+        return {
+            currentEquipmentList: shuffled,
+            totalCorrectNeeded: correctEquipmentsForProc.length
+        };
+    }, [proc]);
 
     // Modal State
     const [showModal, setShowModal] = useState(false);
