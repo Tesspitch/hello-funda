@@ -3,6 +3,7 @@ import startBtn from '../assets/icons/startBtn.svg';
 import nurse from '../assets/img/nurse.svg';
 import logo from '../assets/icons/hellofunda.svg';
 import bg from '../assets/img/background1.png';
+import numsuenLogo from '../assets/icons/NUMSUENLOGO.webp';
 
 export default function Home() {
     return (
@@ -69,8 +70,9 @@ export default function Home() {
                 </svg>
             </Link>
             {/* License Text (มุมซ้ายล่าง) */}
-            <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 text-white/90 font-medium text-xs sm:text-sm drop-shadow-md bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none border border-white/10">
-                คณะพยาบาลศาสตร์ มหาวิทยาลัยมหาสารคาม
+            <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 text-white/90 font-medium text-xs sm:text-sm drop-shadow-md bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none border border-white/10 flex items-center gap-2">
+                <img src={numsuenLogo} alt="NUMSUEN" className="h-8 sm:h-9 w-auto object-contain" />
+                <span>คณะพยาบาลศาสตร์ มหาวิทยาลัยมหาสารคาม</span>
             </div>
         </div>
     );
