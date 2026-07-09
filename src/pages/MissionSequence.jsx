@@ -142,9 +142,25 @@ export default function MissionSequence() {
 
         setScore(calculatedScore);
         setIsSubmitted(true);
+        
+        const sequenceMistakes = [];
+        parts.forEach((part, pIndex) => {
+            const originalSteps = part.steps || [];
+            const userSteps = finalAllSelected[pIndex] || [];
+            originalSteps.forEach((origStep, sIndex) => {
+                const userStep = userSteps[sIndex];
+                if (!userStep || userStep.id !== origStep.id) {
+                    sequenceMistakes.push({
+                        partName: part.partName || `Part ${pIndex + 1}`,
+                        correctStep: `${sIndex + 1}. ${origStep.text}`,
+                        userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)"
+                    });
+                }
+            });
+        });
 
         if (updateMissionSequenceResult) {
-            updateMissionSequenceResult(proc.id, diffId, calculatedScore, initialTime);
+            updateMissionSequenceResult(proc.id, diffId, calculatedScore, initialTime, sequenceMistakes);
         }
 
         setModalInfo({
@@ -260,10 +276,26 @@ export default function MissionSequence() {
 
         setScore(calculatedScore);
         setIsSubmitted(true);
+        
+        const sequenceMistakes = [];
+        parts.forEach((part, pIndex) => {
+            const originalSteps = part.steps || [];
+            const userSteps = finalAllSelected[pIndex] || [];
+            originalSteps.forEach((origStep, sIndex) => {
+                const userStep = userSteps[sIndex];
+                if (!userStep || userStep.id !== origStep.id) {
+                    sequenceMistakes.push({
+                        partName: part.partName || `Part ${pIndex + 1}`,
+                        correctStep: `${sIndex + 1}. ${origStep.text}`,
+                        userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)"
+                    });
+                }
+            });
+        });
 
         if (updateMissionSequenceResult) {
             const timeSpent = initialTime - timeLeft;
-            updateMissionSequenceResult(proc.id, diffId, calculatedScore, timeSpent);
+            updateMissionSequenceResult(proc.id, diffId, calculatedScore, timeSpent, sequenceMistakes);
         }
 
         setShowModal(false);

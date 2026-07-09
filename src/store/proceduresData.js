@@ -162,7 +162,7 @@ export const equipmentData = {
         { id: 4, name: EQUIPMENT_NAMES.NSS_09, img: nss, isCorrect: true },  //
         { id: 5, name: EQUIPMENT_NAMES.COTTON_BUD, img: cotton_bud, isCorrect: true },  //
         { id: 6, name: EQUIPMENT_NAMES.AMBU_BAG, img: ambu_bag, isCorrect: true },   //
-        { id: 7, name: EQUIPMENT_NAMES.SYRINGE, img: syring5cc, isCorrect: true },  //
+        { id: 7, name: EQUIPMENT_NAMES.SYRINGE_5CC, img: syring5cc, isCorrect: true },  //
         { id: 8, name: EQUIPMENT_NAMES.ACEPTO_SYRINGE, img: acepto_syring, isCorrect: false },
         { id: 9, name: EQUIPMENT_NAMES.FLOW_METER, img: flow_meter, isCorrect: true },  //
         { id: 10, name: EQUIPMENT_NAMES.TISSUE, img: tissue, isCorrect: false },

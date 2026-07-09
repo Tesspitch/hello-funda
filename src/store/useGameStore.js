@@ -7,8 +7,11 @@ const defaultDifficultyState = {
     equipmentStatus: "not_done",
     equipmentScore: 0,
     equipmentTimeSpent: 0,
+    missingEquipments: [],
+    extraEquipments: [],
     sequenceScore: 0,
     sequenceTimeSpent: 0,
+    sequenceMistakes: [],
     postTestScore: 0,
     score: 0,
     timeSpentSeconds: 0,
@@ -52,7 +55,7 @@ export const useGameStore = create((set) => ({
     // --- ฟังก์ชันสำหรับรับ Input เพื่ออัปเดตข้อมูล ---
 
     // ฟังก์ชันสำหรับบันทึกผลของ MissionEquipment
-    updateMissionEquipmentResult: (procedureId, diffId, newScore, timeSpent) =>
+    updateMissionEquipmentResult: (procedureId, diffId, newScore, timeSpent, missingEquipments = [], extraEquipments = []) =>
         set((state) => {
             console.log(`[Store] Mission Equipment Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`);
             return {
@@ -65,6 +68,8 @@ export const useGameStore = create((set) => ({
                             equipmentStatus: "pass",
                             equipmentScore: newScore,
                             equipmentTimeSpent: timeSpent,
+                            missingEquipments: missingEquipments,
+                            extraEquipments: extraEquipments,
                         }
                     }
                 }
@@ -90,7 +95,7 @@ export const useGameStore = create((set) => ({
         }),
 
     // ฟังก์ชันสำหรับบันทึกคะแนน Mission Sequence
-    updateMissionSequenceResult: (procedureId, diffId, newScore, timeSpent) =>
+    updateMissionSequenceResult: (procedureId, diffId, newScore, timeSpent, sequenceMistakes = []) =>
         set((state) => {
             console.log(`[Store] Mission Sequence Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`);
             return {
@@ -102,6 +107,7 @@ export const useGameStore = create((set) => ({
                             ...state.procedures[procedureId][diffId],
                             sequenceScore: newScore,
                             sequenceTimeSpent: timeSpent,
+                            sequenceMistakes: sequenceMistakes,
                         }
                     }
                 }

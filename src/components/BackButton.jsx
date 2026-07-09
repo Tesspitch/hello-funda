@@ -5,7 +5,7 @@ import '../index.css';
 export default function BackButton() {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     // For manual UI overrides (PUSH/REPLACE navigations treated as "Back")
     const [uiPendingDest, setUiPendingDest] = useState(null);
 
@@ -62,14 +62,14 @@ export default function BackButton() {
         <>
             {!isHome && (
                 <button className="global-back-btn" onClick={handleBackClick} title="ย้อนกลับ">
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="3" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         className="back-btn-icon"
                     >
                         <path d="M15 18l-6-6 6-6" />

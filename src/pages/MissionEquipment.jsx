@@ -190,8 +190,12 @@ export default function MissionEquipment() {
         setIsChecked(true);
         setIsSubmitted(true);
         
+        const requiredEqNames = equipmentData[proc.id]?.filter(e => e.isCorrect !== false).map(e => e.name) || [];
+        const missingEquipments = requiredEqNames.filter(reqName => !currentSelected.some(sel => sel.name === reqName));
+        const extraEquipments = currentSelected.filter(sel => sel.isCorrect === false).map(e => e.name);
+
         if (updateMissionEquipmentResult) {
-            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, initialTime);
+            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, initialTime, missingEquipments, extraEquipments);
         }
         
         setModalInfo({
@@ -245,8 +249,13 @@ export default function MissionEquipment() {
         setIsSubmitted(true);
 
         const timeSpent = initialTime - timeLeft;
+        
+        const requiredEqNames = equipmentData[proc.id]?.filter(e => e.isCorrect !== false).map(e => e.name) || [];
+        const missingEquipments = requiredEqNames.filter(reqName => !selectedItems.some(sel => sel.name === reqName));
+        const extraEquipments = selectedItems.filter(sel => sel.isCorrect === false).map(e => e.name);
+
         if (updateMissionEquipmentResult) {
-            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, timeSpent);
+            updateMissionEquipmentResult(proc.id, diffId, calculatedScore, timeSpent, missingEquipments, extraEquipments);
 
             console.log("Mission Equipment Completed!", {
                 userId: player?.id,

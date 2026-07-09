@@ -34,6 +34,9 @@ export default function SimulationScore() {
     const sequenceTimeSpent = procedureData.sequenceTimeSpent || 0;
     const totalTimeSpent = equipmentTimeSpent + sequenceTimeSpent;
 
+    const missingEquipments = procedureData.missingEquipments || [];
+    const sequenceMistakes = procedureData.sequenceMistakes || [];
+
     const hasSubmittedRef = useRef(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showEthics, setShowEthics] = useState(true);
@@ -227,6 +230,53 @@ export default function SimulationScore() {
                             <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
                         } />
                     </div>
+
+                    {/* Procedure Summary */}
+                    {(missingEquipments.length > 0 || sequenceMistakes.length > 0) && (
+                        <div className="mt-6 flex flex-col gap-4">
+                            <h3 className="text-xl font-bold border-b pb-2" style={{ color: proc.color, borderColor: proc.bgLight }}>
+                                สรุปข้อผิดพลาดที่พบ
+                            </h3>
+                            
+                            {missingEquipments.length > 0 && (
+                                <div className="bg-red-50 p-4 rounded-xl border border-red-100">
+                                    <h4 className="font-bold text-red-700 flex items-center gap-2 mb-2">
+                                        <span className="text-xl">⚠️</span> อุปกรณ์ที่เตรียมไม่ครบถ้วน
+                                    </h4>
+                                    <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                        {missingEquipments.map((eq, idx) => (
+                                            <li key={idx}>{eq}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {sequenceMistakes.length > 0 && (
+                                <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                                    <h4 className="font-bold text-orange-700 flex items-center gap-2 mb-3">
+                                        <span className="text-xl">🔄</span> ลำดับขั้นตอนที่ผิดสลับกัน
+                                    </h4>
+                                    <div className="space-y-3">
+                                        {sequenceMistakes.map((mistake, idx) => (
+                                            <div key={idx} className="bg-white p-3 rounded-lg border border-orange-200 shadow-sm">
+                                                <p className="font-bold text-sm text-gray-800 mb-2 border-b pb-1">{mistake.partName}</p>
+                                                <div className="flex flex-col gap-2 text-sm">
+                                                    <div className="flex gap-2 items-start bg-green-50 p-2 rounded">
+                                                        <span className="text-green-700 font-bold min-w-[75px]">สิ่งที่ถูก:</span>
+                                                        <span className="text-gray-700 font-medium">{mistake.correctStep}</span>
+                                                    </div>
+                                                    <div className="flex gap-2 items-start bg-red-50 p-2 rounded">
+                                                        <span className="text-red-700 font-bold min-w-[75px]">ที่คุณเลือก:</span>
+                                                        <span className="text-gray-600">{mistake.userStep}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 mt-6" data-html2canvas-ignore="true">
