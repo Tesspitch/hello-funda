@@ -16,7 +16,7 @@ export const proceduresMetaData = [
         bgLight: "#eff6ff",
         videos: [
             { title: "Open Suction", path: "https://youtu.be/76CmfJXWC3s" },
-            { title: "การทำความสะอาดช่องปากและลำคอ", path: "https://youtu.be/gSbmR71O2LY" }
+            { title: "Mouth care", path: "https://youtu.be/gSbmR71O2LY" }
         ]
     },
     {
