@@ -3,6 +3,8 @@
 import ngIcon from '../assets/icons/ng.svg';
 import suctionIcon from '../assets/icons/suction.svg';
 import foleyIcon from '../assets/icons/foley.svg';
+import suction_close from "../assets/vdo/suction/suction_close_ff.mp4";
+import suction_open from "../assets/vdo/suction/suction_open_ff.mp4";
 
 export const proceduresMetaData = [
     {
@@ -13,7 +15,11 @@ export const proceduresMetaData = [
         nameTh: "การดูดเสมหะ",
         desc: "ฝึกการดูแลทางเดินหายใจโดยการดูดเสมหะอย่างถูกต้องและปลอดภัย",
         color: "#4A90E2",
-        bgLight: "#eff6ff"
+        bgLight: "#eff6ff",
+        videos: [
+            { title: "Close Suction", path: suction_close },
+            { title: "Open Suction", path: suction_open }
+        ]
     },
     {
         id: "ng_tube",
@@ -23,7 +29,8 @@ export const proceduresMetaData = [
         nameTh: "การใส่สายยางให้อาหารทางจมูก",
         desc: "ฝึกการใส่สายยางให้อาหารทางจมูกอย่างถูกต้องและปลอดภัย",
         color: "#48BB78",
-        bgLight: "#f0fdf4"
+        bgLight: "#f0fdf4",
+        videos: []
     },
     {
         id: "foley_catheter",
@@ -33,7 +40,8 @@ export const proceduresMetaData = [
         nameTh: "การใส่สายสวนปัสสาวะ",
         desc: "ฝึกการใส่สายสวนปัสสาวะโดยใช้สายสวนปัสสาวะอย่างถูกต้องและปลอดภัย",
         color: "#F56565",
-        bgLight: "#fef2f2"
+        bgLight: "#fef2f2",
+        videos: []
     },
 ];
 
@@ -145,7 +153,7 @@ export const EQUIPMENT_NAMES = {
     EYE_PAD: "ผ้าปิดตา",
     NEEDLE: "เข็มเบอร์ 18",
     SYRINGE_10CC: "Syringe 10 cc",
-    TRANSPORT: "Transport",
+    TRANSPORT: "Transpor",
     RUBBER_APRON: "ผ้ายางกันเปื้อน",
     URINE_CATHETER_LINE: "สายสวนปัสสาวะ",
     URINE_CATHETER_SET: "ชุดสวนปัสสาวะ",

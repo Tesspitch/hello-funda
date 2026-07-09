@@ -11,6 +11,7 @@ import QuizScore from './pages/QuizScore';
 import SimulationScore from './pages/SimulationScore';
 import GetScore from './pages/GetScore';
 import NotFound from './pages/NotFound';
+import VideoReview from './pages/VideoReview';
 import ProtectedRoute from './components/ProtectedRoute';
 import BackButton from './components/BackButton';
 import BGMPlayer from './components/BGMPlayer';
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "select", element: <ProtectedRoute><SelectProcedure /></ProtectedRoute> },
       { path: "mission-equipment", element: <ProtectedRoute><MissionEquipment /></ProtectedRoute> },
       { path: "mission-sequence", element: <ProtectedRoute><MissionSequence /></ProtectedRoute> },
+      { path: "video-review", element: <ProtectedRoute><VideoReview /></ProtectedRoute> },
       { path: "quiz", element: <ProtectedRoute><QuizPhase /></ProtectedRoute> },
       { path: "quiz-score", element: <ProtectedRoute><QuizScore /></ProtectedRoute> },
       { path: "simulation-score", element: <ProtectedRoute><SimulationScore /></ProtectedRoute> },

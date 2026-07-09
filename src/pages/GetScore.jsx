@@ -71,6 +71,15 @@ const StudentExamHistory = () => {
         }
     };
 
+    const formatTime = (totalSeconds) => {
+        if (totalSeconds === undefined || totalSeconds === null) return '-';
+        const num = Number(totalSeconds);
+        if (isNaN(num)) return totalSeconds; // Fallback if it's already formatted or invalid
+        const mins = Math.floor(num / 60);
+        const secs = Math.floor(num % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
     return (
         <div className="min-h-screen w-full relative flex flex-col font-sans" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
             <div className="relative z-10 flex flex-col items-center pt-24 pb-12 px-4 w-full max-w-5xl mx-auto h-full">
@@ -138,7 +147,7 @@ const StudentExamHistory = () => {
                                                 <th className="p-4 font-bold text-center w-16">อันดับ</th>
                                                 <th className="p-4 font-bold">รหัสนิสิต</th>
                                                 <th className="p-4 font-bold">หัตถการ</th>
-                                                <th className="p-4 font-bold text-center">เวลา (วิ)</th>
+                                                <th className="p-4 font-bold text-center">เวลา</th>
                                                 <th className="p-4 font-bold text-right">คะแนนรวม</th>
                                             </tr>
                                         </thead>
@@ -162,7 +171,7 @@ const StudentExamHistory = () => {
                                                     </td>
                                                     <td className="p-4 font-bold text-gray-700">{item.studentId}</td>
                                                     <td className="p-4 text-gray-500 text-sm">{item.procedure}</td>
-                                                    <td className="p-4 text-center text-gray-500 text-sm">{item.time}</td>
+                                                    <td className="p-4 text-center text-gray-500 text-sm">{formatTime(item.time)}</td>
                                                     <td className="p-4 text-right font-black text-[#FB8682] text-lg">{item.score}</td>
                                                 </tr>
                                             ))}
@@ -263,15 +272,15 @@ const StudentExamHistory = () => {
                                         <p className="text-gray-500 text-sm font-medium mb-2">รายละเอียดเวลา</p>
                                         <div className="flex justify-between items-center mb-1">
                                             <span className="text-gray-600 text-sm">เวลาเตรียมอุปกรณ์:</span>
-                                            <span className="font-bold">{selectedRound.equipmentTimeSpent !== undefined ? selectedRound.equipmentTimeSpent : '-'} วิ</span>
+                                            <span className="font-bold">{selectedRound.equipmentTimeSpent !== undefined ? formatTime(selectedRound.equipmentTimeSpent) : '-'} นาที</span>
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-gray-600 text-sm">เวลาจัดลำดับขั้นตอน:</span>
-                                            <span className="font-bold">{selectedRound.sequenceTimeSpent !== undefined ? selectedRound.sequenceTimeSpent : '-'} วิ</span>
+                                            <span className="font-bold">{selectedRound.sequenceTimeSpent !== undefined ? formatTime(selectedRound.sequenceTimeSpent) : '-'} นาที</span>
                                         </div>
                                         <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                                             <span className="text-gray-800 font-bold">เวลาที่ใช้รวม:</span>
-                                            <span className="font-bold text-gray-800 text-lg">{selectedRound.totalTimeSpent} <span className="text-gray-500 font-normal text-sm">วิ</span></span>
+                                            <span className="font-bold text-gray-800 text-lg">{selectedRound.totalTimeSpent !== undefined ? formatTime(selectedRound.totalTimeSpent) : '-'} <span className="text-gray-500 font-normal text-sm">นาที</span></span>
                                         </div>
                                     </div>
                                     <div className="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">

@@ -299,12 +299,12 @@ export default function MissionSequence() {
         }
 
         setShowModal(false);
-        navigate("/quiz", { state: { type: 'post', proc, diffId }, replace: true });
+        navigate("/video-review", { state: { proc, diffId }, replace: true });
     };
 
     const handleModalClose = () => {
         setShowModal(false);
-        navigate("/quiz", { state: { type: 'post', proc, diffId }, replace: true });
+        navigate("/video-review", { state: { proc, diffId }, replace: true });
     };
 
     return (

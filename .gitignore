@@ -103,3 +103,5 @@ coverage
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+src/assets/vdo/suction/*.mp4
