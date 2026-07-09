@@ -3,8 +3,6 @@
 import ngIcon from '../assets/icons/ng.svg';
 import suctionIcon from '../assets/icons/suction.svg';
 import foleyIcon from '../assets/icons/foley.svg';
-import suction_close from "../assets/vdo/suction/suction_close_ff.mp4";
-import suction_open from "../assets/vdo/suction/suction_open_ff.mp4";
 
 export const proceduresMetaData = [
     {
@@ -17,8 +15,8 @@ export const proceduresMetaData = [
         color: "#4A90E2",
         bgLight: "#eff6ff",
         videos: [
-            { title: "Close Suction", path: suction_close },
-            { title: "Open Suction", path: suction_open }
+            { title: "Open Suction", path: "https://youtu.be/76CmfJXWC3s" },
+            { title: "การทำความสะอาดช่องปากและลำคอ", path: "https://youtu.be/gSbmR71O2LY" }
         ]
     },
     {
@@ -30,7 +28,9 @@ export const proceduresMetaData = [
         desc: "ฝึกการใส่สายยางให้อาหารทางจมูกอย่างถูกต้องและปลอดภัย",
         color: "#48BB78",
         bgLight: "#f0fdf4",
-        videos: []
+        videos: [
+            { title: "NG Tube", path: "https://youtu.be/AdvZFPHpw1g" }
+        ]
     },
     {
         id: "foley_catheter",
@@ -41,7 +41,9 @@ export const proceduresMetaData = [
         desc: "ฝึกการใส่สายสวนปัสสาวะโดยใช้สายสวนปัสสาวะอย่างถูกต้องและปลอดภัย",
         color: "#F56565",
         bgLight: "#fef2f2",
-        videos: []
+        videos: [
+            { title: "Foley Catheter", path: "https://youtu.be/aH6QjJwSdrI" }
+        ]
     },
 ];
 

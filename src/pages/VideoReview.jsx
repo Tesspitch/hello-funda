@@ -1,10 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, Navigate, useNavigate } from 'react-router-dom';
 import bg from '../assets/img/background1.png';
 
+const getYouTubeEmbedUrl = (url) => {
+    if (!url) return null;
+    let videoId = null;
+    if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1]?.split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    } else if (url.includes('youtube.com/embed/')) {
+        return url;
+    }
+    return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0&fs=1` : null;
+};
+
 export default function VideoReview() {
-    const [isFocused, setIsFocused] = useState(true);
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const stateData = location.state;
@@ -17,31 +30,7 @@ export default function VideoReview() {
 
     const videos = proc.videos?.length > 0 ? proc.videos : (proc.video ? [{ title: proc.name, path: proc.video }] : []);
     const currentVideo = videos[currentVideoIndex];
-
-    // Anti-screenshot trick: hide video on window blur (Snipping tool) or PrintScreen key
-    useEffect(() => {
-        const handleBlur = () => setIsFocused(false);
-        const handleFocus = () => setIsFocused(true);
-
-        const handleKeyDown = (e) => {
-            if (e.key === 'PrintScreen') {
-                setIsFocused(false);
-                // Clear clipboard (works in some browsers if permission is granted)
-                navigator.clipboard?.writeText?.('Video screenshot is protected.').catch(() => {});
-                setTimeout(() => setIsFocused(true), 2000);
-            }
-        };
-
-        window.addEventListener('blur', handleBlur);
-        window.addEventListener('focus', handleFocus);
-        window.addEventListener('keyup', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-            window.removeEventListener('keyup', handleKeyDown);
-        };
-    }, []);
+    const ytEmbedUrl = currentVideo ? getYouTubeEmbedUrl(currentVideo.path) : null;
 
     const handleNext = () => {
         navigate("/quiz", { state: { type: 'post', proc, diffId }, replace: true });
@@ -75,21 +64,51 @@ export default function VideoReview() {
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">วิดีโอทบทวนขั้นตอนการทำหัตถการ</h2>
                     
                     {videos.length > 1 && (
-                        <div className="flex flex-wrap justify-center gap-3 mb-6 w-full max-w-4xl">
-                            {videos.map((vid, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setCurrentVideoIndex(idx)}
-                                    className={`px-5 py-2.5 rounded-full font-bold text-sm md:text-base transition-all shadow-sm border-2 ${
-                                        currentVideoIndex === idx
-                                            ? 'text-white border-transparent shadow-md'
-                                            : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                                    }`}
-                                    style={currentVideoIndex === idx ? { backgroundColor: proc.color } : {}}
+                        <div className="relative w-full max-w-[280px] mx-auto mb-8">
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="w-full flex items-center justify-between px-6 py-3 bg-white border-2 rounded-2xl focus:outline-none shadow-sm hover:shadow-md transition-all text-gray-800 font-bold"
+                                style={{ borderColor: isDropdownOpen ? proc.color : '#e5e7eb' }}
+                            >
+                                <span className="flex-1 text-center" style={{ color: proc.color }}>
+                                    {currentVideo?.title}
+                                </span>
+                                <svg 
+                                    className={`w-5 h-5 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                                    style={{ color: proc.color }}
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 >
-                                    {vid.title}
-                                </button>
-                            ))}
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            {isDropdownOpen && (
+                                <>
+                                    <div 
+                                        className="fixed inset-0 z-40"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                    ></div>
+                                    <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden transform origin-top transition-all py-2">
+                                        {videos.map((vid, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => {
+                                                    setCurrentVideoIndex(idx);
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className={`w-full text-center px-4 py-3 font-bold transition-colors ${
+                                                    currentVideoIndex === idx 
+                                                    ? 'bg-opacity-10' 
+                                                    : 'text-gray-600 hover:bg-gray-50'
+                                                }`}
+                                                style={currentVideoIndex === idx ? { backgroundColor: `${proc.color}15`, color: proc.color } : {}}
+                                            >
+                                                {vid.title}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     )}
 
@@ -97,21 +116,23 @@ export default function VideoReview() {
                     <div className="w-full max-w-4xl bg-black rounded-2xl flex items-center justify-center aspect-video mb-10 border-4 border-dashed border-gray-300 relative overflow-hidden group select-none" onContextMenu={(e) => e.preventDefault()}>
                         {currentVideo?.path ? (
                             <>
-                                <video 
-                                    key={currentVideo.path}
-                                    src={currentVideo.path} 
-                                    controls 
-                                    className={`w-full h-full object-cover rounded-xl transition-opacity duration-75 ${!isFocused ? 'opacity-0' : 'opacity-100'}`}
-                                    controlsList="nodownload"
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                                {!isFocused && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black z-50">
-                                        <p className="text-white font-bold text-lg flex items-center gap-2">
-                                            <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                            เนื้อหาได้รับการคุ้มครอง
-                                        </p>
-                                    </div>
+                                {ytEmbedUrl ? (
+                                    <iframe 
+                                        key={currentVideo.path}
+                                        src={ytEmbedUrl} 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full rounded-xl"
+                                    ></iframe>
+                                ) : (
+                                    <video 
+                                        key={currentVideo.path}
+                                        src={currentVideo.path} 
+                                        controls 
+                                        className="w-full h-full object-cover rounded-xl"
+                                        controlsList="nodownload"
+                                        onContextMenu={(e) => e.preventDefault()}
+                                    />
                                 )}
                             </>
                         ) : (
