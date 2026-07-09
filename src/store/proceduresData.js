@@ -166,7 +166,7 @@ export const equipmentData = {
         { id: 8, name: EQUIPMENT_NAMES.ACEPTO_SYRINGE, img: acepto_syring, isCorrect: false },
         { id: 9, name: EQUIPMENT_NAMES.FLOW_METER, img: flow_meter, isCorrect: true },  //
         { id: 10, name: EQUIPMENT_NAMES.TISSUE, img: tissue, isCorrect: false },
-        { id: 11, name: EQUIPMENT_NAMES.NIPPLE, img: chada, isCorrect: false },
+        { id: 11, name: EQUIPMENT_NAMES.NIPPLE, img: chada, isCorrect: true },
         { id: 12, name: EQUIPMENT_NAMES.CLEAN_WATER, img: clean_water, isCorrect: true },  //
         { id: 13, name: EQUIPMENT_NAMES.HAND_GEL_WASH, img: handgel, isCorrect: true },  // 
         { id: 14, name: EQUIPMENT_NAMES.NG_LINE, img: ng_line, isCorrect: false },
