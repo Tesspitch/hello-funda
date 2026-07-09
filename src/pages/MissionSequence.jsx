@@ -121,7 +121,7 @@ export default function MissionSequence() {
         let totalSteps = 0;
 
         const verifiedSelectedSteps = {};
-        
+
         parts.forEach((part, pIndex) => {
             const originalSteps = part.steps || [];
             totalSteps += originalSteps.length;
@@ -142,20 +142,20 @@ export default function MissionSequence() {
 
         setScore(calculatedScore);
         setIsSubmitted(true);
-        
+
         const sequenceMistakes = [];
         parts.forEach((part, pIndex) => {
             const originalSteps = part.steps || [];
             const userSteps = finalAllSelected[pIndex] || [];
             originalSteps.forEach((origStep, sIndex) => {
                 const userStep = userSteps[sIndex];
-                if (!userStep || userStep.id !== origStep.id) {
-                    sequenceMistakes.push({
-                        partName: part.partName || `Part ${pIndex + 1}`,
-                        correctStep: `${sIndex + 1}. ${origStep.text}`,
-                        userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)"
-                    });
-                }
+                const isCorrect = userStep && userStep.id === origStep.id;
+                sequenceMistakes.push({
+                    partName: part.partName || `Part ${pIndex + 1}`,
+                    correctStep: `${sIndex + 1}. ${origStep.text}`,
+                    userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)",
+                    isCorrect: isCorrect
+                });
             });
         });
 
@@ -255,7 +255,7 @@ export default function MissionSequence() {
         let totalSteps = 0;
 
         const verifiedSelectedSteps = {};
-        
+
         parts.forEach((part, pIndex) => {
             const originalSteps = part.steps || [];
             totalSteps += originalSteps.length;
@@ -276,20 +276,20 @@ export default function MissionSequence() {
 
         setScore(calculatedScore);
         setIsSubmitted(true);
-        
+
         const sequenceMistakes = [];
         parts.forEach((part, pIndex) => {
             const originalSteps = part.steps || [];
             const userSteps = finalAllSelected[pIndex] || [];
             originalSteps.forEach((origStep, sIndex) => {
                 const userStep = userSteps[sIndex];
-                if (!userStep || userStep.id !== origStep.id) {
-                    sequenceMistakes.push({
-                        partName: part.partName || `Part ${pIndex + 1}`,
-                        correctStep: `${sIndex + 1}. ${origStep.text}`,
-                        userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)"
-                    });
-                }
+                const isCorrect = userStep && userStep.id === origStep.id;
+                sequenceMistakes.push({
+                    partName: part.partName || `Part ${pIndex + 1}`,
+                    correctStep: `${sIndex + 1}. ${origStep.text}`,
+                    userStep: userStep ? `${sIndex + 1}. ${userStep.text}` : "(ไม่ได้เลือก)",
+                    isCorrect: isCorrect
+                });
             });
         });
 
@@ -467,7 +467,7 @@ export default function MissionSequence() {
                                                 }}
                                             >
                                                 <div className="add-icon w-8 h-8 rounded-full flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                                                     style={{ backgroundColor: proc.bgLight, color: proc.color }}>
+                                                    style={{ backgroundColor: proc.bgLight, color: proc.color }}>
                                                     +
                                                 </div>
                                                 <p className="text-gray-700 text-sm leading-relaxed">{step.text}</p>
@@ -525,7 +525,7 @@ export default function MissionSequence() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                             onClick={() => handleRemoveStep(step)}
-                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-center gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg rotate-1 z-50' : 'shadow-sm border-gray-200 hover:shadow-md'
+                                                            className={`relative bg-white p-3 md:p-4 rounded-xl border flex items-start gap-3 transition-shadow ${snapshot.isDragging ? 'shadow-lg rotate-1 z-50' : 'shadow-sm border-gray-200 hover:shadow-md'
                                                                 } ${isSubmitted ? 'cursor-default pointer-events-none' : 'cursor-grab active:cursor-grabbing'}`}
                                                             style={{
                                                                 ...provided.draggableProps.style,
@@ -543,15 +543,22 @@ export default function MissionSequence() {
                                                                 {index + 1}
                                                             </div>
 
-                                                            <p className="text-gray-700 text-sm leading-relaxed flex-1">{step.text}</p>
+                                                            <div className="flex-1 flex flex-col justify-start gap-1">
+                                                                <p className={`text-sm leading-relaxed ${isSubmitted && !step.isCorrect ? 'text-red-500 line-through' : 'text-gray-700'}`}>{step.text}</p>
+                                                                {isSubmitted && !step.isCorrect && (
+                                                                    <div className="text-green-700 text-xs mt-1 font-bold bg-green-50 p-2 rounded-lg border border-green-100 inline-block">
+                                                                        ✅ เฉลย: {sequenceData[proc.id]?.[currentPartIndex]?.steps?.[index]?.text || ''}
+                                                                    </div>
+                                                                )}
+                                                            </div>
 
                                                             {/* Status/Action Icon */}
                                                             {!isSubmitted ? (
-                                                                <div className="text-gray-300 hover:text-red-500 transition-colors px-1 cursor-pointer" onClick={(e) => { e.stopPropagation(); handleRemoveStep(step); }}>
+                                                                <div className="text-gray-300 hover:text-red-500 transition-colors px-1 cursor-pointer mt-1" onClick={(e) => { e.stopPropagation(); handleRemoveStep(step); }}>
                                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                                 </div>
                                                             ) : (
-                                                                <div className="flex items-center justify-center">
+                                                                <div className="flex items-center justify-center mt-1">
                                                                     {step.isCorrect ? (
                                                                         <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                                                                     ) : (
@@ -579,7 +586,7 @@ export default function MissionSequence() {
                                                     ย้อนกลับ
                                                 </button>
                                             )}
-                                            
+
                                             {currentPartIndex < (sequenceData[proc.id]?.length || 1) - 1 ? (
                                                 <button
                                                     onClick={handleNextPart}

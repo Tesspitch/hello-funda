@@ -35,11 +35,13 @@ export default function SimulationScore() {
     const totalTimeSpent = equipmentTimeSpent + sequenceTimeSpent;
 
     const missingEquipments = procedureData.missingEquipments || [];
+    const extraEquipments = procedureData.extraEquipments || [];
     const sequenceMistakes = procedureData.sequenceMistakes || [];
 
     const hasSubmittedRef = useRef(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showEthics, setShowEthics] = useState(true);
+    const [currentView, setCurrentView] = useState('score'); // 'score' | 'errors'
     const [isDownloading, setIsDownloading] = useState(false);
 
     const procEthics = proc ? ethicsData[proc.id] : null;
@@ -205,115 +207,177 @@ export default function SimulationScore() {
                 </div>
 
                 {/* Content */}
+                {/* Content */}
                 <div className="p-6 md:p-10 flex flex-col gap-6">
 
-                    {/* Total Score Circle */}
-                    <div className="flex justify-center -mt-16 relative z-20 mb-4">
-                        <div className="w-32 h-32 rounded-full bg-white shadow-lg border-4 flex flex-col items-center justify-center" style={{ borderColor: proc.color }}>
-                            <span className="text-4xl font-black" style={{ color: proc.color }}>{totalScore}</span>
-                            <span className="text-sm text-gray-500 font-bold">/ 100</span>
-                        </div>
-                    </div>
-
-                    {/* Breakdown */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ScoreCard title="Pre-test" score={preScore} max={10} icon={
-                            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        } />
-                        <ScoreCard title="เตรียมอุปกรณ์" score={eqScore} max={40} icon={
-                            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        } />
-                        <ScoreCard title="ลำดับขั้นตอน" score={seqScore} max={40} icon={
-                            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                        } />
-                        <ScoreCard title="Post-test" score={postScore} max={10} icon={
-                            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
-                        } />
-                    </div>
-
-                    {/* Procedure Summary */}
-                    {(missingEquipments.length > 0 || sequenceMistakes.length > 0) && (
-                        <div className="mt-6 flex flex-col gap-4">
-                            <h3 className="text-xl font-bold border-b pb-2" style={{ color: proc.color, borderColor: proc.bgLight }}>
-                                สรุปข้อผิดพลาดที่พบ
-                            </h3>
-                            
-                            {missingEquipments.length > 0 && (
-                                <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                                    <h4 className="font-bold text-red-700 flex items-center gap-2 mb-2">
-                                        <span className="text-xl">⚠️</span> อุปกรณ์ที่เตรียมไม่ครบถ้วน
-                                    </h4>
-                                    <ul className="list-disc list-inside text-gray-700 space-y-1">
-                                        {missingEquipments.map((eq, idx) => (
-                                            <li key={idx}>{eq}</li>
-                                        ))}
-                                    </ul>
+                    {currentView === 'score' ? (
+                        <>
+                            {/* Total Score Circle */}
+                            <div className="flex justify-center -mt-16 relative z-20 mb-4">
+                                <div className="w-32 h-32 rounded-full bg-white shadow-lg border-4 flex flex-col items-center justify-center" style={{ borderColor: proc.color }}>
+                                    <span className="text-4xl font-black" style={{ color: proc.color }}>{totalScore}</span>
+                                    <span className="text-sm text-gray-500 font-bold">/ 100</span>
                                 </div>
-                            )}
+                            </div>
 
-                            {sequenceMistakes.length > 0 && (
-                                <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                                    <h4 className="font-bold text-orange-700 flex items-center gap-2 mb-3">
-                                        <span className="text-xl">🔄</span> ลำดับขั้นตอนที่ผิดสลับกัน
-                                    </h4>
-                                    <div className="space-y-3">
-                                        {sequenceMistakes.map((mistake, idx) => (
-                                            <div key={idx} className="bg-white p-3 rounded-lg border border-orange-200 shadow-sm">
-                                                <p className="font-bold text-sm text-gray-800 mb-2 border-b pb-1">{mistake.partName}</p>
-                                                <div className="flex flex-col gap-2 text-sm">
-                                                    <div className="flex gap-2 items-start bg-green-50 p-2 rounded">
-                                                        <span className="text-green-700 font-bold min-w-[75px]">สิ่งที่ถูก:</span>
-                                                        <span className="text-gray-700 font-medium">{mistake.correctStep}</span>
-                                                    </div>
-                                                    <div className="flex gap-2 items-start bg-red-50 p-2 rounded">
-                                                        <span className="text-red-700 font-bold min-w-[75px]">ที่คุณเลือก:</span>
-                                                        <span className="text-gray-600">{mistake.userStep}</span>
+                            {/* Breakdown */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <ScoreCard title="Pre-test" score={preScore} max={10} icon={
+                                    <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                } />
+                                <ScoreCard title="เตรียมอุปกรณ์" score={eqScore} max={40} icon={
+                                    <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                } />
+                                <ScoreCard title="ลำดับขั้นตอน" score={seqScore} max={40} icon={
+                                    <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                                } />
+                                <ScoreCard title="Post-test" score={postScore} max={10} icon={
+                                    <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                                } />
+                            </div>
+
+                            {/* Action Buttons for Score View */}
+                            <div className="flex flex-col sm:flex-row gap-4 mt-6" data-html2canvas-ignore="true">
+                                {(missingEquipments.length > 0 || extraEquipments.length > 0 || sequenceMistakes.length > 0) && (
+                                    <button
+                                        onClick={() => setCurrentView('errors')}
+                                        className="flex-1 py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 flex items-center justify-center bg-orange-500 hover:bg-orange-600"
+                                    >
+                                        <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        ดูข้อผิดพลาด
+                                    </button>
+                                )}
+                                <button
+                                    onClick={handleDownloadImage}
+                                    disabled={isDownloading}
+                                    className={`flex-1 py-4 rounded-xl font-bold text-lg border-2 shadow-sm transform transition-all flex items-center justify-center gap-2 ${isDownloading
+                                        ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                        : 'text-gray-700 hover:bg-gray-50 hover:-translate-y-1'
+                                        }`}
+                                    style={!isDownloading ? { borderColor: proc.color } : {}}
+                                >
+                                    {isDownloading ? (
+                                        <>
+                                            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                                            กำลังบันทึก...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                            </svg>
+                                            บันทึกผล
+                                        </>
+                                    )}
+                                </button>
+                                {(missingEquipments.length === 0 && extraEquipments.length === 0 && sequenceMistakes.length === 0) && (
+                                    <button
+                                        onClick={() => navigate('/dashboard')}
+                                        className="flex-1 py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 flex items-center justify-center"
+                                        style={{ backgroundColor: proc.color }}
+                                    >
+                                        กลับสู่หน้าหลัก
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Procedure Summary */}
+                            <div className="flex flex-col gap-4">
+                                <h3 className="text-xl font-bold border-b pb-2" style={{ color: proc.color, borderColor: proc.bgLight }}>
+                                    สรุปข้อผิดพลาดที่พบ
+                                </h3>
+
+                                {missingEquipments.length > 0 && (
+                                    <div className="bg-red-50 p-4 rounded-xl border border-red-100">
+                                        <h4 className="font-bold text-red-700 flex items-center gap-2 mb-2">
+                                            <span className="text-xl">⚠️</span> อุปกรณ์ที่เตรียมไม่ครบถ้วน
+                                        </h4>
+                                        <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                            {missingEquipments.map((eq, idx) => (
+                                                <li key={idx}>{eq}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {extraEquipments.length > 0 && (
+                                    <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                                        <h4 className="font-bold text-yellow-700 flex items-center gap-2 mb-2">
+                                            <span className="text-xl">💡</span> อุปกรณ์ที่เลือกเกิน (ไม่ได้ใช้)
+                                        </h4>
+                                        <ul className="list-disc list-inside text-gray-700 space-y-1">
+                                            {extraEquipments.map((eq, idx) => (
+                                                <li key={idx}>{eq}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {sequenceMistakes.length > 0 && (
+                                    <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                                        <h4 className="font-bold text-orange-700 flex items-center gap-2 mb-3">
+                                            <span className="text-xl">📋</span> สรุปลำดับขั้นตอน
+                                        </h4>
+                                        <div className="space-y-3">
+                                            {sequenceMistakes.map((mistake, idx) => (
+                                                <div key={idx} className={`bg-white p-3 rounded-lg border shadow-sm ${mistake.isCorrect ? 'border-green-200' : 'border-red-200'}`}>
+                                                    <p className="font-bold text-sm text-gray-800 mb-2 border-b pb-1">
+                                                        {mistake.partName} - ขั้นตอนที่ {mistake.correctStep.split('.')[0]}
+                                                    </p>
+                                                    <div className="flex flex-col gap-2 text-sm">
+                                                        {mistake.isCorrect ? (
+                                                            <div className="flex gap-2 items-start bg-green-50 p-2 rounded">
+                                                                <span className="text-green-700 font-bold min-w-[75px]">ที่คุณเลือก:</span>
+                                                                <span className="text-gray-700 font-medium flex-1">{mistake.userStep}</span>
+                                                                <span className="text-green-600 ml-auto flex-shrink-0 font-bold">✅</span>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <div className="flex gap-2 items-start bg-red-50 p-2 rounded">
+                                                                    <span className="text-red-700 font-bold min-w-[75px]">ที่คุณเลือก:</span>
+                                                                    <span className="text-gray-600 flex-1">{mistake.userStep}</span>
+                                                                    <span className="text-red-500 ml-auto flex-shrink-0 font-bold">❌</span>
+                                                                </div>
+                                                                <div className="flex gap-2 items-start bg-green-50 p-2 rounded">
+                                                                    <span className="text-green-700 font-bold min-w-[75px]">เฉลย:</span>
+                                                                    <span className="text-gray-700 font-medium flex-1">{mistake.correctStep}</span>
+                                                                </div>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                )}
+                            </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 mt-6" data-html2canvas-ignore="true">
-                        <button
-                            onClick={handleDownloadImage}
-                            disabled={isDownloading}
-                            className={`flex-1 py-4 rounded-xl font-bold text-lg border-2 shadow-sm transform transition-all flex items-center justify-center gap-2 ${isDownloading
-                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                                : 'text-gray-700 hover:bg-gray-50 hover:-translate-y-1'
-                                }`}
-                            style={!isDownloading ? { borderColor: proc.color } : {}}
-                        >
-                            {isDownloading ? (
-                                <>
-                                    <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                                    กำลังบันทึก...
-                                </>
-                            ) : (
-                                <>
-                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                    </svg>
-                                    บันทึกผล
-                                </>
-                            )}
-                        </button>
-                        <button
-                            onClick={() => navigate('/dashboard')}
-                            className="flex-1 py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 flex items-center justify-center"
-                            style={{ backgroundColor: proc.color }}
-                        >
-                            กลับสู่หน้าหลัก
-                        </button>
-                    </div>
+                            {/* Action Buttons for Errors View */}
+                            <div className="flex flex-col sm:flex-row gap-4 mt-6" data-html2canvas-ignore="true">
+                                <button
+                                    onClick={() => setCurrentView('score')}
+                                    className="flex-1 py-4 rounded-xl font-bold text-lg border-2 shadow-sm transform transition-all flex items-center justify-center gap-2 text-gray-700 hover:bg-gray-50 hover:-translate-y-1"
+                                    style={{ borderColor: proc.color }}
+                                >
+                                    <svg className="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                                    กลับไปดูคะแนน
+                                </button>
+                                <button
+                                    onClick={() => navigate('/dashboard')}
+                                    className="flex-1 py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 flex items-center justify-center"
+                                    style={{ backgroundColor: proc.color }}
+                                >
+                                    กลับสู่หน้าหลัก
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
+        // </div>
     );
 }
 
