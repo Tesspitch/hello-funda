@@ -286,7 +286,7 @@ export default function SimulationScore() {
                             {/* Procedure Summary */}
                             <div className="flex flex-col gap-4">
                                 <h3 className="text-xl font-bold border-b pb-2" style={{ color: proc.color, borderColor: proc.bgLight }}>
-                                    สรุปข้อผิดพลาดที่พบ
+                                    สรุปผลและข้อเสนอแนะเพิ่มเติม
                                 </h3>
 
                                 {missingEquipments.length > 0 && (

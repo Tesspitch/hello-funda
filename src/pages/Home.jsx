@@ -40,7 +40,7 @@ export default function Home() {
                         className="w-[220px] sm:w-[280px] md:w-[340px] lg:w-[400px] [@media(max-height:500px)]:w-[160px] [@media(max-height:500px)]:md:w-[200px] max-w-[80vw] drop-shadow-[0_4px_10px_rgba(255,255,255,0.7)] cursor-pointer animate-btn-pulse"
                     />
                     {/* Shine Effect Overlay */}
-                    <div 
+                    <div
                         className="absolute inset-0 pointer-events-none"
                         style={{
                             WebkitMaskImage: `url(${startBtn})`,
