@@ -29,7 +29,7 @@ export const proceduresMetaData = [
         color: "#48BB78",
         bgLight: "#f0fdf4",
         videos: [
-            { title: "NG Tube", path: "https://youtu.be/AdvZFPHpw1g" }
+            { title: "NG Tube", path: "https://youtu.be/L9q_c6M6bdQ" }
         ]
     },
     {
