@@ -1,30 +1,56 @@
 import { useState, useEffect, useRef } from 'react';
-import bgmSound from '../assets/sound/sound.mp3';
+import { useLocation } from 'react-router-dom';
+import quizSound from '../assets/sound/sound.mp3';
+import defaultSound from '../assets/sound/quizPhase.mp3';
+import summarySound from '../assets/sound/sumaryScore.mp3';
 import '../index.css';
 
 export default function BGMPlayer() {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const location = useLocation();
+    const isInitialMount = useRef(true);
+
+    const getSoundSource = () => {
+        const path = location.pathname;
+        if (path === '/quiz' || path === '/mission-equipment' || path === '/mission-sequence' || path === '/video-review') {
+            return quizSound;
+        }
+        if (path === '/simulation-score') {
+            return summarySound;
+        }
+        return defaultSound;
+    };
+
+    const currentSound = getSoundSource();
 
     useEffect(() => {
-        // Attempt to auto-play when component mounts
         if (audioRef.current) {
             audioRef.current.volume = 0.4; // Set a pleasant default volume
-            const playPromise = audioRef.current.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        // Auto-play started successfully
-                        setIsPlaying(true);
-                    })
-                    .catch((error) => {
-                        // Auto-play was prevented by the browser (user hasn't interacted with document yet)
-                        setIsPlaying(false);
-                        console.log("Auto-play prevented. User must interact first.");
-                    });
+
+            if (isInitialMount.current) {
+                isInitialMount.current = false;
+                const playPromise = audioRef.current.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            setIsPlaying(true);
+                        })
+                        .catch((error) => {
+                            setIsPlaying(false);
+                            console.log("Auto-play prevented. User must interact first.");
+                        });
+                }
+            } else {
+                if (isPlaying) {
+                    const playPromise = audioRef.current.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch((error) => console.log("Play interrupted", error));
+                    }
+                }
             }
         }
-    }, []);
+    }, [currentSound]);
 
     const togglePlay = () => {
         if (audioRef.current) {
@@ -40,7 +66,7 @@ export default function BGMPlayer() {
 
     return (
         <>
-            <audio ref={audioRef} src={bgmSound} loop />
+            <audio ref={audioRef} src={currentSound} loop />
             <button
                 className="global-sound-btn"
                 onClick={togglePlay}
