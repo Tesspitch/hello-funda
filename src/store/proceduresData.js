@@ -68,7 +68,7 @@ import kidney_basin from "../assets/img/suction/14_kidney_basin.webp";          
 import glass from "../assets/img/suction/15_glass.webp";                        // NG
 import alcohol_70 from "../assets/img/suction/16_70_alcohol.webp";              // NG  // FALSE
 import clean_water from "../assets/img/suction/clean_water.webp"
-
+import glass_1 from "../assets/img/glass.webp"
 
 ////////////////////
 //// NG TUBE //////

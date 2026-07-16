@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '../utils/logger';
 
 
 const defaultDifficultyState = {
@@ -57,7 +58,7 @@ export const useGameStore = create((set) => ({
     // ฟังก์ชันสำหรับบันทึกผลของ MissionEquipment
     updateMissionEquipmentResult: (procedureId, diffId, newScore, timeSpent, missingEquipments = [], extraEquipments = []) =>
         set((state) => {
-            console.log(`[Store] Mission Equipment Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`);
+            logger.action(`Mission Equipment Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`, { missingEquipments, extraEquipments });
             return {
                 procedures: {
                     ...state.procedures,
@@ -79,7 +80,7 @@ export const useGameStore = create((set) => ({
     // ฟังก์ชันสำหรับบันทึกคะแนน Pre-test
     updatePreTestResult: (procedureId, diffId, newScore) =>
         set((state) => {
-            console.log(`[Store] Pre-test Score for ${procedureId} (${diffId}): ${newScore}/10`);
+            logger.action(`Pre-test Score for ${procedureId} (${diffId}): ${newScore}/10`);
             return {
                 procedures: {
                     ...state.procedures,
@@ -97,7 +98,7 @@ export const useGameStore = create((set) => ({
     // ฟังก์ชันสำหรับบันทึกคะแนน Mission Sequence
     updateMissionSequenceResult: (procedureId, diffId, newScore, timeSpent, sequenceMistakes = []) =>
         set((state) => {
-            console.log(`[Store] Mission Sequence Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`);
+            logger.action(`Mission Sequence Score for ${procedureId} (${diffId}): ${newScore}/40 (Time: ${timeSpent}s)`, { sequenceMistakes });
             return {
                 procedures: {
                     ...state.procedures,
@@ -117,7 +118,7 @@ export const useGameStore = create((set) => ({
     // ฟังก์ชันสำหรับบันทึกคะแนน Post-test (Quiz)
     updatePostTestResult: (procedureId, diffId, newScore) =>
         set((state) => {
-            console.log(`[Store] Post-test Score for ${procedureId} (${diffId}): ${newScore}/10`);
+            logger.action(`Post-test Score for ${procedureId} (${diffId}): ${newScore}/10`);
             return {
                 procedures: {
                     ...state.procedures,
